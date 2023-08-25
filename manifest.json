@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "PromptSnippets",
+  "version": "1.0.0",
+  "action": {},
+  "permissions": ["activeTab", "scripting", "storage"],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  }
+}

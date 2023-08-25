@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* variables */
+
+.light {
+    --color-base-100: 255 255 255;
+    --color-base-200: 251 251 252;
+    --color-base-300: 245 246 248;
+    --color-base-400: 243 245 247;
+
+    --color-content-100: 25 27 32;
+    --color-content-200: 40 42 48;
+    --color-content-300: 60 65 73 ;
+    --color-content-400: 107 111 118;
+
+    --color-neutral-100: 237 240 243;
+    --color-neutral-200: 223 225 228;
+    --color-neutral-300: 144 149 157;
+    --color-neutral-400: 144 149 157;
+
+    --color-primary-100: 110 121 214;
+    --color-primary-200: 92 103 199;
+    --color-primary-content-100: 255 255 255;
+    --color-primary-content-200: 255 255 255;
+}
+
+.dark {
+    --color-base-100: 25 26 34;
+    --color-base-200: 28 29 41;
+    --color-base-300: 32 33 45;
+    --color-base-400: 38 39 53;
+
+    --color-content-100: 238 239 252;
+    --color-content-200: 228 229 244;
+    --color-content-300: 210 211 224;
+    --color-content-400: 133 134 153;
+
+    --color-neutral-100: 33 34 52;
+    --color-neutral-200: 49 50 72;
+    --color-neutral-300: 76 79 107;
+    --color-neutral-400: 76 79 107;
+
+    --color-primary-100: 94 106 210;
+    --color-primary-200: 113 124 225;
+    --color-primary-content-100: 255 255 255;
+    --color-primary-content-200: 255 255 255;
+}
+
+.light, .dark {
+    background-color: rgb(var(--color-base-100));
+    color: rgb(var(--color-content-100))
+}
+
+/* shadow */
+
+.light .menu-popup-shadow {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 56px;
+}
+
+.dark .menu-popup-shadow {
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 12px 56px;
+}
+
+.light .popup-shadow {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px;
+}
+
+.dark .popup-shadow {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px;
+}
+
+.btn-shadow {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
+}
+
+/* components */
+
+.btn {
+    @apply flex justify-center items-center py-0.5 px-3 text-sm rounded-md bg-base-100 text-content-300 border border-neutral-200;
+    transition: all 0.15s;
+}
+.btn:hover {
+    @apply bg-base-300 text-content-100;
+}
+.btn-primary {
+    @apply bg-primary-100 text-primary-content-100 border-primary-100;
+}
+.btn-primary:hover {
+    @apply bg-primary-200 text-primary-content-200 border-primary-200;
+}
+.btn-primary:disabled {
+    opacity: 0.6;
+}
