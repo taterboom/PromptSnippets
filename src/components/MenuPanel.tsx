@@ -7,14 +7,13 @@ import { MiAdd, MiClose, MiSettings } from "./UI/icons"
 import SettingsPanel from "./SettingsPanel"
 
 function Header(props: { onCreate?: () => void }) {
-  const disabled = usePageState((state) => state.disabled)
   return (
     <div>
       <div className="flex justify-between p-4">
         <div>Logo</div>
         <div className="flex items-center gap-2">
           <button
-            className="btn btn-icon"
+            className="btn btn-icon btn-ghost"
             onClick={() => {
               usePageState.setState({ settingsPanelVisible: true })
             }}
