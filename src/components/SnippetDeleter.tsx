@@ -6,7 +6,7 @@ export default function SnippetsDeleter(props: { id: string; onClose: () => void
   const snippet = useSnippets((state) => state.snippetsStore[props.id])
   if (!snippet) return null
   return (
-    <PopupContainer>
+    <PopupContainer onClick={props.onClose}>
       <div className="text-base">
         Are you sure you want to delete <span className="font-semibold">{snippet.name}</span>?
       </div>

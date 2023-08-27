@@ -11,30 +11,32 @@ import { MiArrowDown, MiArrowUp, MiEnter } from "./UI/icons"
 
 function NoSnippets() {
   return (
-    <div className="p-4 space-y-2">
-      <div className="flex items-center gap-2 text-sm font-medium text-content-100">
-        <div>Logo</div>
-        <div>PromptSnippets</div>
-      </div>
-      <div className="text-xs text-content-300 space-y-1">
-        <div>Click Popup action to manage your prompt snippets</div>
-        <div>
-          Shortcut <KBD>Command</KBD>/<KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle
-          PromptSnippets in this page
+    <Container>
+      <div className="p-4 space-y-2">
+        <div className="flex items-center gap-2 text-sm font-medium text-content-100">
+          <div>Logo</div>
+          <div>PromptSnippets</div>
         </div>
-        <div>
-          Type <KBD>/</KBD> to open the popup
+        <div className="text-xs text-content-300 space-y-1">
+          <div>Click Popup action to manage your prompt snippets</div>
+          <div>
+            Shortcut <KBD>Command</KBD>/<KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle
+            PromptSnippets in this page
+          </div>
+          <div>
+            Type <KBD>/</KBD> to open the popup
+          </div>
         </div>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            usePageState.setState({ menuPanelVisible: true })
+          }}
+        >
+          Go to create a prompt snippet
+        </button>
       </div>
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          usePageState.setState({ menuPanelVisible: true })
-        }}
-      >
-        Go to create a prompt snippet
-      </button>
-    </div>
+    </Container>
   )
 }
 
@@ -71,7 +73,7 @@ function Container(
     <div
       {...props}
       className={clsx(
-        "popup-shadow min-w-[240px] max-w-[300px] max-h-[240px] bg-base-100 text-content-100 border border-neutral-200 rounded overflow-hidden",
+        "popup-shadow min-w-[240px] max-w-[300px] max-h-[240px] w-max bg-base-100 text-content-100 border border-neutral-200 rounded overflow-hidden",
         props.className
       )}
     >
@@ -85,16 +87,16 @@ function Footer() {
     <div className="flex justify-between items-center border-t border-neutral-100 py-1.5 px-3 text-xs opacity-70">
       <div className="space-x-2">
         <span className="inline-flex items-center gap-1">
-          <KBD className="!h-4 !px-[3px] text-xs">
+          <KBD>
             <MiArrowUp />
           </KBD>
-          <KBD className="!h-4 !px-[3px] text-xs -ml-0.5">
+          <KBD className="-ml-0.5">
             <MiArrowDown />
-          </KBD>{" "}
+          </KBD>
           navigate
         </span>
         <span className="inline-flex items-center gap-1">
-          <KBD className="!h-4 !px-[3px] text-xs">
+          <KBD>
             <MiEnter />
           </KBD>
           select
@@ -106,7 +108,14 @@ function Footer() {
 }
 
 // " /sometext " => "sometext "
-const formatSearchText = (text: string) => text.trimStart().slice(1)
+const formatSearchText = (triggerSymbol: string[], text: string) => {
+  const str = text.trimStart()
+  const symbol = triggerSymbol
+    .filter((item) => str.startsWith(item))
+    .sort((a, b) => b.length - a.length)[0]
+  if (symbol) return str.slice(symbol.length)
+  return text
+}
 
 function SnippetsPicker() {
   const snippets = useSnippets(snippetsSelectors.snippets)
@@ -114,7 +123,9 @@ function SnippetsPicker() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const activeIdRef = useRef(activeId)
   activeIdRef.current = activeId
-  const [text, setText] = useState<string | null>(target ? formatSearchText(target.value) : null)
+  const [text, setText] = useState<string | null>(
+    target ? formatSearchText(usePageState.getState().triggerSymbol, target.value) : null
+  )
   const fuseInstance = useMemo(() => {
     return new Fuse<Snippet>(snippets, {
       includeMatches: true,
@@ -134,8 +145,8 @@ function SnippetsPicker() {
     const snippet = snippets.find((item) => item.id === activeIdRef.current)
     if (snippet && target) {
       setInputValue(target, snippet.content)
-      if (!selectNextRange(target)) {
-        awesomeSetSelectionRange(target, 0, 0)
+      if (!selectNextRange(usePageState.getState().wrapperSymbol, target)) {
+        awesomeSetSelectionRange(target, snippet.content.length, snippet.content.length)
       }
     }
   }
@@ -145,7 +156,11 @@ function SnippetsPicker() {
       return
     }
     const onChange = (e: any) => {
-      setText(e.target.value ? formatSearchText(e.target.value) : null)
+      setText(
+        e?.target?.value
+          ? formatSearchText(usePageState.getState().triggerSymbol, e.target.value)
+          : null
+      )
     }
     target.addEventListener("input", onChange)
     target.addEventListener("change", onChange)
@@ -174,12 +189,13 @@ function SnippetsPicker() {
       }
       if (e.key === "Enter") {
         e.preventDefault()
+        e.stopPropagation()
         applySnippetRef.current?.()
       }
     }
-    document.addEventListener("keydown", onKeyDown)
+    document.addEventListener("keydown", onKeyDown, { capture: true })
     return () => {
-      document.removeEventListener("keydown", onKeyDown)
+      document.removeEventListener("keydown", onKeyDown, { capture: true })
     }
   }, [snippets, target])
   useEffect(() => {
@@ -331,6 +347,7 @@ function SnippetsPopupInner() {
 export default function SnippetsPopup() {
   const disabled = usePageState((state) => state.disabled)
   const target = usePageState((state) => state.currentInput)
+  const triggerSymbol = usePageState((state) => state.triggerSymbol)
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     if (!target) {
@@ -338,7 +355,8 @@ export default function SnippetsPopup() {
       return
     }
     const onChange = (e: any) => {
-      setVisible(e.target?.value?.startsWith?.("/") ?? false)
+      console.log(e?.target?.value)
+      setVisible(triggerSymbol.some((item) => e?.target?.value?.startsWith?.(item)))
     }
     onChange(target.value)
     target.addEventListener("input", onChange)
@@ -347,7 +365,7 @@ export default function SnippetsPopup() {
       target.removeEventListener("input", onChange)
       target.removeEventListener("change", onChange)
     }
-  }, [target])
+  }, [target, triggerSymbol])
 
   return (
     <AnimatePresence>

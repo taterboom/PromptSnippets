@@ -1,6 +1,7 @@
 import { create } from "zustand"
 
 import { pick } from "lodash"
+import { DEFAULT_IDS, DEFAULT_SNIPPETS_STORE } from "../constants"
 import { Snippet } from "../types"
 import { genId } from "../utils/id"
 import { toastErrWhenFailed } from "../utils/toastErrWhenFailed"
@@ -16,8 +17,8 @@ type SnippetsState = {
 
 export const useSnippets = create<SnippetsState>()(
   logger((set, get) => ({
-    ids: [],
-    snippetsStore: {},
+    ids: DEFAULT_IDS,
+    snippetsStore: DEFAULT_SNIPPETS_STORE,
     addSnippet: (snippetWithoutId) => {
       const id = genId()
       const snippet = { ...snippetWithoutId, id }

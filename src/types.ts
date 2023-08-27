@@ -5,7 +5,9 @@ export type Snippet = {
 }
 
 export type ServerStore = {
-  disabledUrls: string[]
   ids: string[]
   snippetsStore: Record<string, Snippet>
+  disabledUrls: string[]
+  wrapperSymbol: string[]
+  triggerSymbol: string[]
 }

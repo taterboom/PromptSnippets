@@ -1,8 +1,22 @@
-export const getNextRange = (text: string) => {
-  const result = text.match(/\{\{[^{}]*\}\}/)
-  if (result && result[0] && result.index !== undefined) {
-    return [result.index, result.index + result[0].length]
-  }
+export const getNextRange = (wrapperSymbol: string[], text: string) => {
+  return wrapperSymbol
+    .map((item) => {
+      const [left, right] = item
+        .trim()
+        .split(" ")
+        .map((str) => str.trim())
+      const leftIndex = text.indexOf(left)
+      if (leftIndex === -1) return
+      const rightIndex = text.indexOf(right, leftIndex + left.length)
+      if (rightIndex === -1) return
+      return [leftIndex, rightIndex + right.length]
+    })
+    .filter((item) => !!item)
+    .sort((a, b) => {
+      const sort1 = a![0] - b![0]
+      if (sort1 !== 0) return sort1
+      return a![1] - b![1]
+    })[0]
 }
 
 export const awesomeSetSelectionRange = async (
@@ -18,8 +32,11 @@ export const awesomeSetSelectionRange = async (
   inputEl.setSelectionRange(start, end)
 }
 
-export const selectNextRange = (inputEl: HTMLInputElement | HTMLTextAreaElement) => {
-  const range = getNextRange(inputEl.value)
+export const selectNextRange = (
+  wrapperSymbol: string[],
+  inputEl: HTMLInputElement | HTMLTextAreaElement
+) => {
+  const range = getNextRange(wrapperSymbol, inputEl.value)
   console.log("range", inputEl.value, range)
   if (range) {
     awesomeSetSelectionRange(inputEl, range[0], range[1])

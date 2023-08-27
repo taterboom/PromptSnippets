@@ -16,7 +16,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
   const [name, setName] = useState(currentSnippet?.name || "")
 
   return (
-    <PopupContainer>
+    <PopupContainer onClick={props.onClose}>
       <input
         placeholder="Command"
         type="text"

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useSnippets } from "../store/snippets"
 import { usePageState } from "../store/pageState"
 import { ServerStore } from "../types"
+import { getUriKey } from "../utils/uri"
 
 export function useInit() {
   const [ready, setReady] = useState(false)
@@ -11,11 +12,10 @@ export function useInit() {
         ids: serverStore.ids,
         snippetsStore: serverStore.snippetsStore,
       })
-      const urlObj = new URL(window.location.href)
-      const urlKey = `${urlObj.hostname}${urlObj.pathname}`
-      console.log("urlKey", urlKey, serverStore.disabledUrls)
       usePageState.setState({
-        disabled: serverStore.disabledUrls?.includes?.(urlKey) ?? true,
+        disabled: serverStore.disabledUrls?.includes?.(getUriKey(window.location.href)) ?? true,
+        triggerSymbol: serverStore.triggerSymbol,
+        wrapperSymbol: serverStore.wrapperSymbol,
       })
     }
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

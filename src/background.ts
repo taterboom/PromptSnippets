@@ -1,5 +1,13 @@
 import { debounce } from "lodash"
+import {
+  DEFAULT_DISABLED_URLS,
+  DEFAULT_IDS,
+  DEFAULT_SNIPPETS_STORE,
+  DEFAULT_TRIGGER_SYMBOL,
+  DEFAULT_WRAPPER_SYMBOL,
+} from "./constants"
 import { ServerStore, Snippet } from "./types"
+import { getUriKey } from "./utils/uri"
 
 // should apply scripting permissions in manifest.json
 // // @ts-ignore
@@ -21,15 +29,22 @@ chrome.action.onClicked.addListener((tab) => {
 let store: ServerStore
 
 async function init() {
-  const { disabledUrls, ids } = await chrome.storage.sync.get(["disabledUrls", "ids"])
+  const { disabledUrls, triggerSymbol, wrapperSymbol, ids } = await chrome.storage.sync.get([
+    "disabledUrls",
+    "triggerSymbol",
+    "wrapperSymbol",
+    "ids",
+  ])
   let snippetsStore: Record<string, Snippet> = {}
   if (ids?.length) {
     snippetsStore = await chrome.storage.sync.get([...ids])
   }
   store = {
-    disabledUrls: disabledUrls || [],
-    ids: ids || [],
-    snippetsStore: snippetsStore || {},
+    disabledUrls: disabledUrls || DEFAULT_DISABLED_URLS,
+    ids: ids || DEFAULT_IDS,
+    snippetsStore: snippetsStore || DEFAULT_SNIPPETS_STORE,
+    triggerSymbol: triggerSymbol || DEFAULT_TRIGGER_SYMBOL,
+    wrapperSymbol: wrapperSymbol || DEFAULT_WRAPPER_SYMBOL,
   }
 }
 
@@ -39,10 +54,15 @@ chrome.storage.sync.onChanged.addListener((changes) => {
   console.log("changes", changes)
   Object.entries(changes).forEach(([key, changeObj]) => {
     if (key === "ids") {
-      store.ids = changeObj.newValue || []
+      store.ids = changeObj.newValue || DEFAULT_IDS
     } else if (key === "disabledUrls") {
-      store.disabledUrls = changeObj.newValue || []
+      store.disabledUrls = changeObj.newValue || DEFAULT_DISABLED_URLS
+    } else if (key === "triggerSymbol") {
+      store.triggerSymbol = changeObj.newValue || DEFAULT_TRIGGER_SYMBOL
+    } else if (key === "wrapperSymbol") {
+      store.wrapperSymbol = changeObj.newValue || DEFAULT_WRAPPER_SYMBOL
     } else {
+      // snippetsStore
       if (changeObj.newValue) {
         store.snippetsStore[key] = changeObj.newValue
       } else {
@@ -59,12 +79,11 @@ chrome.commands.onCommand.addListener((command, tab) => {
   console.log("command", command, tab)
   if (command === "toggle-prompt-snippets") {
     if (tab.id && tab.url) {
-      const urlObj = new URL(tab.url)
-      const urlKey = `${urlObj.hostname}${urlObj.pathname}`
-      if (store.disabledUrls.includes(urlKey)) {
-        store.disabledUrls = store.disabledUrls.filter((url) => url !== urlKey)
+      const uriKey = getUriKey(tab.url)
+      if (store.disabledUrls.includes(uriKey)) {
+        store.disabledUrls = store.disabledUrls.filter((url) => url !== uriKey)
       } else {
-        store.disabledUrls = [...store.disabledUrls, urlKey]
+        store.disabledUrls = [...store.disabledUrls, uriKey]
       }
       chrome.tabs.sendMessage(tab.id, {
         type: "prompt-snippets/update-store",
@@ -76,7 +95,7 @@ chrome.commands.onCommand.addListener((command, tab) => {
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("message", message, sender)
+  console.log("message", message, sender, store)
   if (message?.type === "prompt-snippets/get-store") {
     if (store) {
       sendResponse(store)
@@ -86,6 +105,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
       return true
     }
+  }
+  if (message?.type === "prompt-snippets/toggle") {
+    if (!sender.tab?.id || !sender.tab?.url) return
+    const uriKey = getUriKey(sender.tab.url)
+    const { disabled } = message.payload
+    if (store.disabledUrls.includes(uriKey) && !disabled) {
+      store.disabledUrls = store.disabledUrls.filter((url) => url !== uriKey)
+    } else if (!store.disabledUrls.includes(uriKey) && disabled) {
+      store.disabledUrls = [...store.disabledUrls, uriKey]
+    }
+    chrome.tabs.sendMessage(sender.tab.id, {
+      type: "prompt-snippets/update-store",
+      payload: store,
+    })
+    syncDisabledUrls()
   }
 })
 

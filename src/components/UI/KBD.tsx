@@ -6,7 +6,10 @@ export default function KBD(
   return (
     <span
       {...props}
-      className={clsx("inline-flex items-center rounded h-6 px-2 bg-neutral-200", props.className)}
+      className={clsx(
+        "inline-flex items-center rounded h-4 px-[3px] text-xs bg-neutral-200",
+        props.className
+      )}
     >
       {props.children}
     </span>

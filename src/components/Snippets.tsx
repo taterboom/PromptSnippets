@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { MiDelete, MiEdit } from "./UI/icons"
 import SnippetEditor from "./SnippetEditor"
 import SnippetsDeleter from "./SnippetDeleter"
+import KBD from "./UI/KBD"
 
 function useIsFirstMount() {
   const isFirst = useRef(true)
@@ -103,13 +104,41 @@ function SnippetCard(props: { data: Snippet }) {
   )
 }
 
-export default function Snippets() {
+function NoSnippets(props: { onCreate: () => void }) {
+  return (
+    <div className="p-4 space-y-2">
+      <div className="flex items-center gap-2 text-sm font-medium text-content-100">
+        <div>Logo</div>
+        <div>PromptSnippets</div>
+      </div>
+      <div className="text-xs text-content-300 space-y-1">
+        <div>Click Popup action to manage your prompt snippets</div>
+        <div>
+          Shortcut <KBD>Command</KBD>/<KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle
+          PromptSnippets in this page
+        </div>
+        <div>
+          Type <KBD>/</KBD> to open the popup
+        </div>
+      </div>
+      <button className="btn btn-primary" onClick={props.onCreate}>
+        Create a prompt snippet
+      </button>
+    </div>
+  )
+}
+
+export default function Snippets(props: { onCreate: () => void }) {
   const snippets = useSnippets(snippetsSelectors.snippets)
   return (
     <div className="divide-y divide-base-400">
-      {snippets.map((snippet: any) => {
-        return <SnippetCard key={snippet.id} data={snippet}></SnippetCard>
-      })}
+      {snippets.length > 0 ? (
+        snippets.map((snippet: any) => {
+          return <SnippetCard key={snippet.id} data={snippet}></SnippetCard>
+        })
+      ) : (
+        <NoSnippets onCreate={props.onCreate}></NoSnippets>
+      )}
     </div>
   )
 }
