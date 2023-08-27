@@ -1,24 +1,14 @@
-import MenuPanel from "./MenuPanel"
 import cssText from "../base.css?inline"
-import { useSnippets } from "../store/snippets"
-import { useEffect, useState } from "react"
-import EnhanceInput from "./EnhanceInput"
-import SnippetsPopup from "./SnippetsPopup"
 import { useDarkMode } from "../hooks/useDarkMode"
+import { useInit } from "../hooks/useInit"
+import EnhanceInput from "./EnhanceInput"
+import MenuPanel from "./MenuPanel"
+import SnippetsPopup from "./SnippetsPopup"
 
 export default function App() {
   const isDarkMode = useDarkMode()
-  const [inited, setInited] = useState(false)
-  const init = useSnippets((state) => state.init)
-  useEffect(() => {
-    init()
-      .then(() => setInited(true))
-      .catch((err) => {
-        // TODO init failed
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  if (!inited) return null
+  const ready = useInit()
+  if (!ready) return null
   return (
     <div className={isDarkMode ? "dark" : "light"}>
       <style>{cssText}</style>

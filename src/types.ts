@@ -3,3 +3,9 @@ export type Snippet = {
   name: string
   content: string
 }
+
+export type ServerStore = {
+  disabledUrls: string[]
+  ids: string[]
+  snippetsStore: Record<string, Snippet>
+}

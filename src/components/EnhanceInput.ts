@@ -3,7 +3,9 @@ import { usePageState } from "../store/pageState"
 import { selectNextRange } from "../utils/range"
 
 export default function () {
+  const disabled = usePageState((state) => state.disabled)
   useEffect(() => {
+    if (disabled) return
     // check current active element
     if (
       document.activeElement instanceof HTMLInputElement ||
@@ -12,7 +14,7 @@ export default function () {
       usePageState.setState({ currentInput: document.activeElement })
     }
     // listen to input element
-    document.addEventListener("keydown", (e) => {
+    const onKeydown = (e: KeyboardEvent) => {
       const target = e.target
       if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
         usePageState.setState({ currentInput: target })
@@ -23,7 +25,11 @@ export default function () {
       } else {
         // usePageState.setState({ currentInput: null })
       }
-    })
-  }, [])
+    }
+    document.addEventListener("keydown", onKeydown)
+    return () => {
+      document.removeEventListener("keydown", onKeydown)
+    }
+  }, [disabled])
   return null
 }

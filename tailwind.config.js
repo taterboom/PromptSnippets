@@ -36,8 +36,17 @@ export default {
         100: "rgb(var(--color-primary-content-100) / <alpha-value>)", // default
         200: "rgb(var(--color-primary-content-200) / <alpha-value>)", // hover
       },
+      danger: {
+        // button background
+        100: "rgb(var(--color-danger-100) / <alpha-value>)", // default
+        200: "rgb(var(--color-danger-200) / <alpha-value>)", // hover
+      },
+      "danger-content": {
+        // button foreground
+        100: "rgb(var(--color-danger-content-100) / <alpha-value>)", // default
+        200: "rgb(var(--color-danger-content-200) / <alpha-value>)", // hover
+      },
     },
-    extend: {},
   },
   plugins: [],
 }

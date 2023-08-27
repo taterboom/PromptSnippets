@@ -24,6 +24,11 @@
     --color-primary-200: 92 103 199;
     --color-primary-content-100: 255 255 255;
     --color-primary-content-200: 255 255 255;
+
+    --color-danger-100: 235 86 86;
+    --color-danger-200: 255 118 124;
+    --color-danger-content-100: 255 255 255;
+    --color-danger-content-200: 255 255 255;
 }
 
 .dark {
@@ -37,15 +42,20 @@
     --color-content-300: 210 211 224;
     --color-content-400: 133 134 153;
 
-    --color-neutral-100: 33 34 52;
-    --color-neutral-200: 49 50 72;
-    --color-neutral-300: 76 79 107;
+    --color-neutral-100: 35 36 55;
+    --color-neutral-200: 52 54 76;
+    --color-neutral-300: 77 80 109;
     --color-neutral-400: 76 79 107;
 
     --color-primary-100: 94 106 210;
     --color-primary-200: 113 124 225;
     --color-primary-content-100: 255 255 255;
     --color-primary-content-200: 255 255 255;
+
+    --color-danger-100: 235 86 86;
+    --color-danger-200: 255 118 124;
+    --color-danger-content-100: 255 255 255;
+    --color-danger-content-200: 255 255 255;
 }
 
 .light, .dark {
@@ -64,11 +74,11 @@
 }
 
 .light .popup-shadow {
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 12px;
 }
 
 .dark .popup-shadow {
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 6px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 3px 12px;
 }
 
 .btn-shadow {
@@ -77,19 +87,53 @@
 
 /* components */
 
+/* btn */
+
 .btn {
-    @apply flex justify-center items-center py-0.5 px-3 text-sm rounded-md bg-base-100 text-content-300 border border-neutral-200;
+    @apply inline-flex justify-center items-center h-7 px-3.5 text-sm rounded-md bg-base-100 text-content-300 border border-neutral-200;
     transition: all 0.15s;
+}
+.btn.btn-sm {
+    @apply text-xs h-5 px-2;
 }
 .btn:hover {
     @apply bg-base-300 text-content-100;
 }
-.btn-primary {
+.btn:disabled {
+    opacity: 0.6;
+}
+.btn.btn-primary {
     @apply bg-primary-100 text-primary-content-100 border-primary-100;
 }
-.btn-primary:hover {
+.btn.btn-primary:hover {
     @apply bg-primary-200 text-primary-content-200 border-primary-200;
 }
-.btn-primary:disabled {
-    opacity: 0.6;
+.btn.btn-danger {
+    @apply bg-danger-100 text-danger-content-100 border-danger-100;
+}
+.btn.btn-danger:hover {
+    @apply bg-danger-100 text-danger-content-100 border-danger-100;
+}
+.btn.btn-icon {
+    @apply w-6 h-6 p-0;
+}
+.btn.btn-sm.btn-icon {
+    @apply w-5 h-5;
+}
+.btn.btn-ghost {
+    @apply bg-transparent border-transparent hover:border-neutral-200 hover:bg-base-300;
+}
+
+/* checkbox */
+
+.checkbox {
+    @apply appearance-none border-none m-0 w-[32px] h-[20px] rounded-full bg-neutral-200 relative transition-all;
+    @apply after:absolute after:w-[14px] after:h-[14px] after:left-[3px] after:top-[3px] after:rounded-full after:bg-base-100 after:transition-all
+}
+.checkbox:hover {
+    @apply bg-neutral-300;
+}
+.checkbox:checked {
+    @apply bg-primary-100;
+    @apply after:left-[15px];
 }
