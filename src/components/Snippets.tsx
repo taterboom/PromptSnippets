@@ -48,7 +48,6 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
               text={props.data.name}
               positions={props.matches?.filter((match) => match.key === "name")?.[0]?.indices || []}
             ></HighlightText>
-            {props.data.name}
           </div>
           <div
             className={clsx(
