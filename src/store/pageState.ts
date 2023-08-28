@@ -7,6 +7,7 @@ type PageState = {
   snippetsPopupVisible: boolean
   menuPanelVisible: boolean
   settingsPanelVisible: boolean
+  helpPanelVisible: boolean
   triggerSymbol: string[]
   wrapperSymbol: string[]
   searchText: string
@@ -22,6 +23,7 @@ export const usePageState = create<PageState>()((set) => ({
   snippetsPopupVisible: false,
   menuPanelVisible: false,
   settingsPanelVisible: false,
+  helpPanelVisible: false,
   triggerSymbol: DEFAULT_TRIGGER_SYMBOL,
   wrapperSymbol: DEFAULT_WRAPPER_SYMBOL,
   searchText: "",

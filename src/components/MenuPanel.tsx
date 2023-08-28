@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import SnippetEditor from "./SnippetEditor"
 import Snippets from "./Snippets"
 import { usePageState } from "../store/pageState"
-import { MiAdd, MiClose, MiSearch, MiSettings } from "./UI/icons"
+import { MiCircleHelp, MiAdd, MiClose, MiSearch, MiSettings } from "./UI/icons"
 import SettingsPanel from "./SettingsPanel"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
+import HelpPanel from "./HelpPanel"
 
 function Header(props: { onCreate?: () => void }) {
   const searchText = usePageState((state) => state.searchText)
@@ -15,6 +16,14 @@ function Header(props: { onCreate?: () => void }) {
       <div className="flex justify-between p-4">
         <div>Logo</div>
         <div className="flex items-center gap-2">
+          <button
+            className="btn btn-icon btn-ghost"
+            onClick={() => {
+              usePageState.setState({ helpPanelVisible: true })
+            }}
+          >
+            <MiCircleHelp />
+          </button>
           <button
             className="btn btn-icon btn-ghost"
             onClick={() => {
@@ -65,6 +74,7 @@ function Header(props: { onCreate?: () => void }) {
 export default function MenuPanel() {
   const menuPanelVisible = usePageState((state) => state.menuPanelVisible)
   const settingsPanelVisible = usePageState((state) => state.settingsPanelVisible)
+  const helpPanelVisible = usePageState((state) => state.helpPanelVisible)
   const [snippetEditorVisible, setSnippetEditorVisible] = useState(false)
   return (
     <AnimatePresence>
@@ -97,6 +107,15 @@ export default function MenuPanel() {
                   usePageState.setState({ settingsPanelVisible: false })
                 }}
               ></SettingsPanel>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {helpPanelVisible && (
+              <HelpPanel
+                onClose={() => {
+                  usePageState.setState({ helpPanelVisible: false })
+                }}
+              ></HelpPanel>
             )}
           </AnimatePresence>
         </motion.div>
