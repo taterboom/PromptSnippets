@@ -3,7 +3,7 @@ export const getNextRange = (wrapperSymbol: string[], text: string) => {
     .map((item) => {
       const [left, right] = item
         .trim()
-        .split(" ")
+        .split(/\s+/)
         .map((str) => str.trim())
       const leftIndex = text.indexOf(left)
       if (leftIndex === -1) return

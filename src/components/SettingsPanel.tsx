@@ -12,7 +12,7 @@ function EnableSection() {
   return (
     <div className="p-2 hover:bg-base-200">
       <div className="flex gap-2">
-        <div className="flex-1">
+        <div className="flex-1 overflow-hidden">
           <div className="text-base text-content-100 break-words">Enable the extension</div>
           <div className="text-sm text-content-400 break-words">
             on the current page {getUriKey(window.location.href)}
