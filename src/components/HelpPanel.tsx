@@ -17,13 +17,12 @@ export default function HelpPanel(props: { onClose: () => void }) {
           <div className="text-sm text-content-300 mt-1.5 space-y-px">
             <p>
               Trigger a snippets suggestion panel by typing <KBD>/</KBD> (can be configured as
-              whatever you want) in any input field.
+              whatever you want) in any input box.
             </p>
             <p>
               Select a snippet from the panel by clicking on it or using the arrow keys to navigate
               and pressing Enter.
             </p>
-            <p>The selected snippet will be automatically inserted into the input field.</p>
             <p>
               Use the <KBD>Tab</KBD> key to navigate between variables within the snippet.
             </p>
@@ -45,6 +44,22 @@ export default function HelpPanel(props: { onClose: () => void }) {
             <p>
               Or use the shortcut <KBD>Ctrl</KBD>/<KBD>Cmd</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD>{" "}
               to toggle the extension in current page
+            </p>
+          </div>
+        </div>
+        <div className="p-2 hover:bg-base-200">
+          <h2 className="text-sm text-content-100 font-semibold">Privacy Policy</h2>
+          <div className="text-sm text-content-300 mt-1.5 space-y-px">
+            <p>
+              PromptSnippets extension stores your snippets and settings using{" "}
+              <a
+                className="underline"
+                href="https://developer.chrome.com/docs/extensions/reference/storage/"
+                target="_blank"
+              >
+                Chrome storage
+              </a>
+              . Data will not be sent to any other place.
             </p>
           </div>
         </div>

@@ -27,7 +27,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
           triggerSymbol[0] ?? ""
         }prefix".`}</div>
         <input
-          placeholder="e.g. ts"
+          placeholder="e.g. translate"
           type="text"
           className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
           value={name}
