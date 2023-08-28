@@ -10,7 +10,7 @@ function EnableSection() {
   const updateDisabled = usePageState((state) => state.updateDisabled)
 
   return (
-    <div className="p-2 hover:bg-base-300">
+    <div className="p-2 hover:bg-base-200">
       <div className="flex gap-2">
         <div className="flex-1">
           <div className="text-base text-content-100 break-words">Enable the extension</div>
@@ -39,7 +39,7 @@ function WrapperSymbolSection() {
   const [createPopupVisible, setCreatePopupVisible] = useState(false)
   return (
     <>
-      <div className="p-2 hover:bg-base-300">
+      <div className="p-2 hover:bg-base-200">
         <div className="flex gap-2">
           <div className="flex-1">
             <div className="text-base text-content-100 break-words">Wrapper Symbol</div>
@@ -126,7 +126,7 @@ function TriggerSymbolSection() {
   const [createPopupVisible, setCreatePopupVisible] = useState(false)
   return (
     <>
-      <div className="p-2 hover:bg-base-300">
+      <div className="p-2 hover:bg-base-200">
         <div className="flex gap-2">
           <div className="flex-1 overflow-hidden">
             <div className="text-base text-content-100 break-words">Trigger symbol</div>
@@ -192,7 +192,7 @@ function TriggerSymbolEditor(props: { onCancel: () => void; onSave: (value: stri
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <div className="flex justify-end items-center">
+        <div className="flex justify-end items-center gap-2">
           <button className="btn" onClick={props.onCancel}>
             Cancel
           </button>

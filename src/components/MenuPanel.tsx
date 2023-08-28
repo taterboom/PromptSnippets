@@ -3,10 +3,13 @@ import { motion, AnimatePresence } from "framer-motion"
 import SnippetEditor from "./SnippetEditor"
 import Snippets from "./Snippets"
 import { usePageState } from "../store/pageState"
-import { MiAdd, MiClose, MiSettings } from "./UI/icons"
+import { MiAdd, MiClose, MiSearch, MiSettings } from "./UI/icons"
 import SettingsPanel from "./SettingsPanel"
+import { snippetsSelectors, useSnippets } from "../store/snippets"
 
 function Header(props: { onCreate?: () => void }) {
+  const searchText = usePageState((state) => state.searchText)
+  const snippes = useSnippets(snippetsSelectors.snippets)
   return (
     <div>
       <div className="flex justify-between p-4">
@@ -34,6 +37,26 @@ function Header(props: { onCreate?: () => void }) {
         <button className="btn btn-primary !px-2 !h-6" onClick={props.onCreate}>
           <MiAdd className="mr-1" /> Create
         </button>
+        {snippes.length > 0 ? (
+          <label className="relative">
+            <input
+              placeholder="Search Snippets"
+              type="text"
+              className="max-w-[160px] block text-xs bg-base-200 text-content-300 border border-neutral-200 rounded w-full py-1 px-2 focus:border-primary-100 focus-visible:outline-none"
+              value={searchText}
+              onChange={(e) => {
+                usePageState.setState({ searchText: e.target.value })
+              }}
+            />
+            {!searchText && (
+              <span className="absolute top-1/2 right-2 -translate-y-1/2 text-xs text-content-300">
+                <MiSearch />
+              </span>
+            )}
+          </label>
+        ) : (
+          <div data-flex-item></div>
+        )}
       </div>
     </div>
   )

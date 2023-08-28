@@ -9,6 +9,7 @@ type PageState = {
   settingsPanelVisible: boolean
   triggerSymbol: string[]
   wrapperSymbol: string[]
+  searchText: string
 
   updateDisabled: (disabled: boolean) => void
   updateTriggerSymbol: (triggerSymbol: string[]) => void
@@ -23,6 +24,7 @@ export const usePageState = create<PageState>()((set) => ({
   settingsPanelVisible: false,
   triggerSymbol: DEFAULT_TRIGGER_SYMBOL,
   wrapperSymbol: DEFAULT_WRAPPER_SYMBOL,
+  searchText: "",
 
   updateDisabled: (disabled) => {
     set({ disabled })
