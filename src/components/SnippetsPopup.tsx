@@ -181,8 +181,6 @@ function SnippetsPicker() {
     }
   }, [candidateSnippets])
 
-  console.log(candidateSnippets)
-
   return (
     <>
       {candidateSnippets.length === 0 ? (
@@ -330,7 +328,6 @@ export default function SnippetsPopup() {
       return
     }
     const onChange = (e: any) => {
-      console.log(e?.target?.value)
       setVisible(triggerSymbol.some((item) => e?.target?.value?.startsWith?.(item)))
     }
     onChange(target.value)

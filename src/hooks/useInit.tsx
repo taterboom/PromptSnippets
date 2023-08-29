@@ -19,7 +19,6 @@ export function useInit() {
       })
     }
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log("message", message)
       if (message?.type === "prompt-snippets/update-store") {
         if (message?.payload) {
           initState(message.payload)

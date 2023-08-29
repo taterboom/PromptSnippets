@@ -37,7 +37,6 @@ export const selectNextRange = (
   inputEl: HTMLInputElement | HTMLTextAreaElement
 ) => {
   const range = getNextRange(wrapperSymbol, inputEl.value)
-  console.log("range", inputEl.value, range)
   if (range) {
     awesomeSetSelectionRange(inputEl, range[0], range[1])
     return true
