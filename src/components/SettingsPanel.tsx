@@ -13,8 +13,8 @@ function EnableSection() {
     <div className="p-2 hover:bg-base-200">
       <div className="flex gap-2">
         <div className="flex-1 overflow-hidden">
-          <div className="text-base text-content-100 break-words">Enable the extension</div>
-          <div className="text-sm text-content-400 break-words">
+          <div className="text-sm text-content-100 break-words">Enable the extension</div>
+          <div className="text-xs text-content-400 break-words">
             on the current page {getUriKey(window.location.href)}
           </div>
         </div>
@@ -42,8 +42,8 @@ function WrapperSymbolSection() {
       <div className="p-2 hover:bg-base-200">
         <div className="flex gap-2">
           <div className="flex-1">
-            <div className="text-base text-content-100 break-words">Wrapper Symbol</div>
-            <div className="text-sm text-content-400 break-words">
+            <div className="text-sm text-content-100 break-words">Wrapper Symbol</div>
+            <div className="text-xs text-content-400 break-words">
               Defines the symbol used to wrap variable content
             </div>
           </div>
@@ -98,7 +98,7 @@ function WrapperSymbolEditor(props: { onCancel: () => void; onSave: (value: stri
   return (
     <PopupContainer onClick={props.onCancel}>
       <div className="space-y-4">
-        <div className="text-base text-content-200">
+        <div className="text-sm text-content-200">
           {"use a space as a variable placeholder, for example: {{ }}"}
         </div>
         <input
@@ -129,8 +129,8 @@ function TriggerSymbolSection() {
       <div className="p-2 hover:bg-base-200">
         <div className="flex gap-2">
           <div className="flex-1 overflow-hidden">
-            <div className="text-base text-content-100 break-words">Trigger symbol</div>
-            <div className="text-sm text-content-400 break-words">
+            <div className="text-sm text-content-100 break-words">Trigger symbol</div>
+            <div className="text-xs text-content-400 break-words">
               Defines the symbol that triggers commands at the beginning of the input text
             </div>
           </div>
@@ -185,7 +185,7 @@ function TriggerSymbolEditor(props: { onCancel: () => void; onSave: (value: stri
   return (
     <PopupContainer onClick={props.onCancel}>
       <div className="space-y-4">
-        <div className="text-base text-content-200">{"popup trigger symbol, for example: /"}</div>
+        <div className="text-sm text-content-200">{"popup trigger symbol, for example: /"}</div>
         <input
           type="text"
           className="block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"

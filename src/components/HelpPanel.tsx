@@ -7,9 +7,18 @@ export default function HelpPanel(props: { onClose: () => void }) {
     <PopupContainer wrapperClassName="!px-2" onClick={props.onClose}>
       <div className="flex justify-between items-center px-2">
         <div className="text-base font-semibold">Help</div>
-        <button className="btn btn-icon" onClick={props.onClose}>
-          <MiClose />
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href="https://github.com/taterboom/PromptSnippets/issues"
+            target="_blank"
+            className="text-content-400/70 text-xs underline"
+          >
+            feedback
+          </a>
+          <button className="btn btn-icon" onClick={props.onClose}>
+            <MiClose />
+          </button>
+        </div>
       </div>
       <div className="divide-y divide-neutral-100">
         <div className="p-2 hover:bg-base-200">
