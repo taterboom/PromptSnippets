@@ -5,11 +5,11 @@ export const getNextRange = (wrapperSymbol: string[], text: string) => {
         .trim()
         .split(/\s+/)
         .map((str) => str.trim())
-      const leftIndex = text.indexOf(left)
-      if (leftIndex === -1) return
-      const rightIndex = text.indexOf(right, leftIndex + left.length)
-      if (rightIndex === -1) return
-      return [leftIndex, rightIndex + right.length]
+      const firstRightIndex = text.indexOf(right)
+      if (firstRightIndex === -1) return
+      const lastLeftIndexBeforeFirstRightIndex = text.lastIndexOf(left, firstRightIndex)
+      if (lastLeftIndexBeforeFirstRightIndex === -1) return
+      return [lastLeftIndexBeforeFirstRightIndex, firstRightIndex + right.length]
     })
     .filter((item) => !!item)
     .sort((a, b) => {
