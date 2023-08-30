@@ -9,6 +9,7 @@ import Fuse from "fuse.js"
 import { Snippet } from "../types"
 import { MiArrowDown, MiArrowUp, MiEnter, TablerMoodEmptyFilled } from "./UI/icons"
 import HighlightText from "./UI/HighlightText"
+import { ROOT_ID } from "../constants"
 
 function NoSnippets() {
   return (
@@ -208,6 +209,20 @@ function SnippetsPicker() {
       setActiveId(null)
     }
   }, [candidateSnippets])
+  useEffect(() => {
+    if (activeId) {
+      console.log(activeId)
+      const activeEl = document
+        .getElementById(ROOT_ID)
+        ?.shadowRoot?.querySelector("#ps-p-" + activeId)
+      if (activeEl) {
+        activeEl.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        })
+      }
+    }
+  }, [activeId])
 
   return (
     <>
@@ -231,6 +246,7 @@ function SnippetsPicker() {
                 {candidateSnippets.map(({ item, matches }) => (
                   <div
                     key={item.id}
+                    id={"ps-p-" + item.id}
                     className={clsx(
                       "px-3 py-1 text-sm text-content-300 rounded",
                       item.id === activeId && "!bg-base-400 !text-content-100"
