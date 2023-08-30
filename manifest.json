@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PromptSnippets",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "action": {},
   "icons": {
     "32": "logo-32.png",
@@ -20,7 +20,7 @@
         "default": "Alt+Shift+P",
         "mac": "Command+Shift+P"
       },
-      "description": "Toggle PromptSnippets under the current page URL"
+      "description": "Toggle PromptSnippets in the current page"
     }
   },
   "content_scripts": [
