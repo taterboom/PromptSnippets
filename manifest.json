@@ -3,6 +3,12 @@
   "name": "PromptSnippets",
   "version": "1.0.0",
   "action": {},
+  "icons": {
+    "32": "logo-32.png",
+    "64": "logo-64.png",
+    "128": "logo-128.png",
+    "256": "logo-256.png"
+  },
   "permissions": ["activeTab", "storage"],
   "background": {
     "service_worker": "src/background.ts",

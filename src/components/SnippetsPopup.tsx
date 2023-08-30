@@ -7,26 +7,48 @@ import { awesomeSetSelectionRange, selectNextRange, setInputValue } from "../uti
 import KBD from "./UI/KBD"
 import Fuse from "fuse.js"
 import { Snippet } from "../types"
-import { MiArrowDown, MiArrowUp, MiEnter } from "./UI/icons"
+import { MiArrowDown, MiArrowUp, MiEnter, TablerMoodEmptyFilled } from "./UI/icons"
 import HighlightText from "./UI/HighlightText"
 
 function NoSnippets() {
   return (
     <Container>
       <div className="p-4 space-y-2">
-        <div className="flex items-center gap-2 text-sm font-medium text-content-100">
-          <div>Logo</div>
+        <div
+          className="flex items-center gap-2 text-sm font-medium text-content-100"
+          onClick={() => {
+            usePageState.setState({ menuPanelVisible: true })
+          }}
+        >
+          <div>
+            <img src={chrome.runtime.getURL("logo-128.png")} width={24} height={24} alt="" />
+          </div>
           <div>PromptSnippets</div>
         </div>
         <div className="text-xs text-content-300 space-y-1">
-          <div>Click Popup action to manage your prompt snippets</div>
-          <div>
-            Shortcut <KBD>Command</KBD>/<KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle
-            PromptSnippets in this page
+          <div className="text-sm">
+            You haven't created any snippets yet.{" "}
+            <TablerMoodEmptyFilled className="inline ml-0.5" />
           </div>
           <div>
-            Type <KBD>/</KBD> to open the popup
+            <button
+              className="underline"
+              onClick={() => {
+                usePageState.setState({ menuPanelVisible: true })
+              }}
+            >
+              Get started now
+            </button>{" "}
+            to enhance your browsing experience!
           </div>
+          <div className="text-content-300">
+            You can type <KBD>/</KBD> in any input box to open the popup and select the snippet in
+            it.
+          </div>
+          {/* <div>
+            If you don't want to use the popup, you can use the shortcut <KBD>Command</KBD>/
+            <KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle PromptSnippets in this page.
+          </div> */}
         </div>
         <button
           className="btn btn-primary"
@@ -77,7 +99,13 @@ function Footer() {
           select
         </span>
       </div>
-      <div>Logo</div>
+      <button
+        onClick={() => {
+          usePageState.setState({ menuPanelVisible: true })
+        }}
+      >
+        <img width={18} height={18} src={chrome.runtime.getURL("logo-128.png")} alt="" />
+      </button>
     </div>
   )
 }
@@ -197,9 +225,9 @@ function SnippetsPicker() {
         </Container>
       ) : (
         <div className="relative">
-          <Container>
+          <Container className="flex flex-col">
             <>
-              <div className="p-1">
+              <div className="p-1 flex-1 overflow-y-auto">
                 {candidateSnippets.map(({ item, matches }) => (
                   <div
                     key={item.id}

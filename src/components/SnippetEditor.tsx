@@ -38,7 +38,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
       </div>
       <div className="space-y-1">
         <div className="text-sm text-content-100">Content</div>
-        <div className="text-xs text-content-400">{`The snippet content. Insert variable values with ${wrapper[0]}VariableName${wrapper[1]}`}</div>
+        <div className="text-xs text-content-400">{`The snippet content. wrap variable values with ${wrapper[0]}VariableName${wrapper[1]}`}</div>
         <textarea
           className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
           placeholder={`e.g. Translate the text to ${wrapper[0]}language${wrapper[1]}: ${wrapper[0]}text${wrapper[1]}`}

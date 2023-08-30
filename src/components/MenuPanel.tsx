@@ -14,7 +14,9 @@ function Header(props: { onCreate?: () => void }) {
   return (
     <div>
       <div className="flex justify-between p-4">
-        <div>Logo</div>
+        <div>
+          <img width={24} height={24} src={chrome.runtime.getURL("logo-128.png")} alt="" />
+        </div>
         <div className="flex items-center gap-2">
           <button
             className="btn btn-icon btn-ghost"
@@ -85,10 +87,10 @@ export default function MenuPanel() {
           exit={{ x: 32, opacity: 0 }}
           transition={{ duration: 0.12 }}
           // `will-change` is required to act as containing block for the fixed-position children such as popups
-          className="will-change-transform fixed top-0 right-0 bottom-0 w-96 bg-base-100 shadow-lg z-[100000]"
+          className="will-change-transform fixed top-0 right-0 bottom-0 w-96 bg-base-100 shadow-lg z-[100000] flex flex-col"
         >
           <Header onCreate={() => setSnippetEditorVisible(true)}></Header>
-          <div className="mt-2">
+          <div className="flex-1 overflow-y-auto mt-2">
             <Snippets onCreate={() => setSnippetEditorVisible(true)}></Snippets>
           </div>
           <AnimatePresence>

@@ -3,7 +3,7 @@ import { snippetsSelectors, useSnippets } from "../store/snippets"
 import { Snippet } from "../types"
 import clsx from "classnames"
 import { AnimatePresence, motion } from "framer-motion"
-import { MiDelete, MiEdit } from "./UI/icons"
+import { MiDelete, MiEdit, TablerMoodEmptyFilled } from "./UI/icons"
 import SnippetEditor from "./SnippetEditor"
 import SnippetsDeleter from "./SnippetDeleter"
 import KBD from "./UI/KBD"
@@ -120,23 +120,24 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
 function NoSnippets(props: { onCreate: () => void }) {
   return (
     <div className="p-4 space-y-2">
-      <div className="flex items-center gap-2 text-sm font-medium text-content-100">
-        <div>Logo</div>
-        <div>PromptSnippets</div>
-      </div>
       <div className="text-xs text-content-300 space-y-1">
-        <div>Click Popup action to manage your prompt snippets</div>
-        <div>
-          Shortcut <KBD>Command</KBD>/<KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle
-          PromptSnippets in this page
+        <div className="text-sm">
+          You haven't created any snippets yet. <TablerMoodEmptyFilled className="inline ml-0.5" />
         </div>
         <div>
-          Type <KBD>/</KBD> to open the popup
+          <button className="underline" onClick={props.onCreate}>
+            Get started now
+          </button>{" "}
+          to enhance your browsing experience!
         </div>
+        <div className="text-content-300">
+          You can type <KBD>/</KBD> in any input box to open the popup and select the snippet in it.
+        </div>
+        {/* <div>
+            If you don't want to use the popup, you can use the shortcut <KBD>Command</KBD>/
+            <KBD>Alt</KBD> + <KBD>Shift</KBD> + <KBD>P</KBD> to toggle PromptSnippets in this page.
+          </div> */}
       </div>
-      <button className="btn btn-primary" onClick={props.onCreate}>
-        Create a prompt snippet
-      </button>
     </div>
   )
 }
