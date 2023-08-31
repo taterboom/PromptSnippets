@@ -40,6 +40,7 @@ body::before {
   height: 200px;
   left: calc(50% - 250px - 50px);
   top: 160px;
+  z-index: -1;
   opacity: 0.3;
   filter: blur(150px);
   background-image: radial-gradient(50% 50% at 50% 50%, rgb(251 57 134) 0, rgb(205 62 156) 70%, rgb(70 176 254) 100%);

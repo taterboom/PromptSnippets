@@ -54,16 +54,16 @@ export default function Home() {
         <h2 className="hidden">Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FeatureCard
-            title="Variable Snippets"
+            title="🧩 Variable Snippets"
             content="PromptSnippets offers the ability to use variable snippets, you can create
               and utilize customized shortcuts for faster and more efficient input on the web."
           />
           <FeatureCard
-            title="Convenient Input"
+            title="⚡ Convenient Input"
             content={`Enjoy the convenience of quick input by simply typing "/" followed by the desired snippet, eliminating the need for time-consuming manual input.`}
           />
           <FeatureCard
-            title="No Login Required"
+            title="🔐 No Login Required"
             content={
               <>
                 PromptSnippets extension stores your snippets and settings using{" "}
