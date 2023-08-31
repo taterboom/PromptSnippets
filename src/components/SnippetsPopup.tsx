@@ -10,6 +10,7 @@ import { Snippet } from "../types"
 import { MiArrowDown, MiArrowUp, MiEnter, TablerMoodEmptyFilled } from "./UI/icons"
 import HighlightText from "./UI/HighlightText"
 import { ROOT_ID } from "../constants"
+import { throttle } from "lodash"
 
 function NoSnippets() {
   return (
@@ -319,14 +320,16 @@ function SnippetsPopupInner() {
   useEffect(() => {
     const rootEl = rootRef.current
     const contentEl = contentRef.current
-    const setPosition = () => {
+    const setPosition = throttle(() => {
       if (!rootEl || !contentEl || !target) return
       const targetRect = target.getBoundingClientRect()
       const top = targetRect.top
-      const bottom = window.innerHeight - targetRect.bottom
-      if (top < 240 + 16 && bottom > 240) {
+      const lineHeight = parseInt(getComputedStyle(target).lineHeight) || 16
+      const bottom = targetRect.top + lineHeight + 16
+      const bottomFromBottom = window.innerHeight - bottom
+      if (top < 240 + 16 && bottomFromBottom > 240) {
         rootEl.style.left = targetRect.left + "px"
-        rootEl.style.top = targetRect.bottom + "px"
+        rootEl.style.top = bottom + "px"
         contentEl.style.top = "8px"
         contentEl.style.bottom = "initial"
       } else {
@@ -335,7 +338,7 @@ function SnippetsPopupInner() {
         contentEl.style.bottom = "8px"
         contentEl.style.top = "initial"
       }
-    }
+    }, 17)
     setPosition()
     window.addEventListener("resize", setPosition)
     window.addEventListener("scroll", setPosition)

@@ -7,6 +7,7 @@
     "test": "vitest run",
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:web": "vite build -c vite.config.web.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
