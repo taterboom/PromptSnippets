@@ -47,7 +47,10 @@ export const useSnippets = create<SnippetsState>()(
     removeSnippets: (toBeRemovedIds) => {
       const ids = get().ids.filter((id) => !toBeRemovedIds.includes(id))
       set({ ids, snippetsStore: pick(get().snippetsStore, [...ids]) })
-      toastErrWhenFailed([chrome.storage.sync.remove(ids), chrome.storage.sync.set({ ids })])
+      toastErrWhenFailed([
+        chrome.storage.sync.remove(toBeRemovedIds),
+        chrome.storage.sync.set({ ids }),
+      ])
     },
   }))
 )

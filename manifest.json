@@ -9,7 +9,7 @@
     "128": "logo-128.png",
     "256": "logo-256.png"
   },
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["storage"],
   "background": {
     "service_worker": "src/background.ts",
     "type": "module"
