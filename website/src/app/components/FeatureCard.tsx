@@ -15,7 +15,7 @@ export default function FeatureCard(props: { title: React.ReactNode; content: Re
   return (
     <div className="bg-base-100 p-4">
       <div
-        className="group relative px-10 py-4 bg-base-100 text-content-100 rounded-2xl overflow-hidden"
+        className="group h-full relative px-10 py-4 bg-base-100 text-content-100 rounded-2xl overflow-hidden"
         onMouseMove={onMouseMove}
       >
         <div className="absolute inset-0">
@@ -45,7 +45,7 @@ export default function FeatureCard(props: { title: React.ReactNode; content: Re
           ></div>
         </div>
         <div className="relative z-10 cursor-default">
-          <div className="text-base text-content-100">{props.title}</div>
+          <div className="text-base font-medium text-content-100 -ml-[21px]">{props.title}</div>
           <div className="text-sm text-content-300 mt-2">{props.content}</div>
         </div>
       </div>

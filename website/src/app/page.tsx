@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="space-y-32">
       <header className="container flex justify-between items-center py-2">
-        <div className="flex items-center gap-2 text-lg">
+        <div className="flex items-center gap-2 text-lg font-medium">
           <Image src="/logo-128.png" width={48} height={48} alt="logo"></Image>
           PromptSnippets
         </div>
@@ -37,22 +37,22 @@ export default function Home() {
         </div>
       </header>
       <div className="container text-center">
-        <h1 className="text-5xl lead leading-tight">
+        <h1 className="text-5xl lead leading-tight font-medium">
           Speed up the input <br />
           with variable snippets
         </h1>
-        <p className="text-base text-content-300 mt-6">
+        <p className="text-lg text-content-300 mt-6">
           Whether you{`'`}re coding, blogging, or emailing, <br /> turn repetitive typing into a
           single click with PromptSnippets.
         </p>
-        <div className="mt-8 text-center">
+        <div className="mt-12 text-center">
           {/* <Button className="inline-block">Add to Chrome</Button> */}
           <button className="btn">Add to Chrome</button>
         </div>
       </div>
       <Section id="features" className="container !mt-36">
         <h2 className="hidden">Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <FeatureCard
             title="🧩 Variable Snippets"
             content="PromptSnippets offers the ability to use variable snippets, you can create
