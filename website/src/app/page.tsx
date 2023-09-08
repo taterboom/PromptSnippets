@@ -30,7 +30,10 @@ export default function Home() {
             {/* <a className="text-sm text-content-300/90 hover:text-content-100 transition-colors">
               Blog
             </a> */}
-            <a className="text-sm text-content-300/90 hover:text-content-100 transition-colors">
+            <a
+              className="text-sm text-content-300/90 hover:text-content-100 transition-colors"
+              href="https://chrome.google.com/webstore/detail/promptsnippets/dkafkdphnlodjiggkpbokmponlkjfaco"
+            >
               Download
             </a>
           </nav>
@@ -96,7 +99,9 @@ export default function Home() {
           <Image src="/logo-128.png" width={64} height={64} alt="logo"></Image>
           <h2 className="text-4xl">Ready for get started</h2>
         </div>
-        <button className="btn mt-8">Get started now</button>
+        <a href="https://chrome.google.com/webstore/detail/promptsnippets/dkafkdphnlodjiggkpbokmponlkjfaco">
+          <button className="btn mt-8">Get started now</button>
+        </a>
       </Section>
       <div className="container divide"></div>
       <footer className="container flex justify-between items-center text-content-400 py-6 !mt-0">
