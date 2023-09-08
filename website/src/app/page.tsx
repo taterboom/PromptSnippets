@@ -50,7 +50,9 @@ export default function Home() {
         </p>
         <div className="mt-12 text-center">
           {/* <Button className="inline-block">Add to Chrome</Button> */}
-          <button className="btn">Add to Chrome</button>
+          <a href="https://chrome.google.com/webstore/detail/promptsnippets/dkafkdphnlodjiggkpbokmponlkjfaco">
+            <button className="btn">Add to Chrome</button>
+          </a>
         </div>
       </div>
       <Section id="features" className="container !mt-36">
