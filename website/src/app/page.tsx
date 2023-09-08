@@ -39,7 +39,7 @@ export default function Home() {
           </nav>
         </div>
       </header>
-      <div className="container text-center">
+      <Section className="container text-center">
         <h1 className="text-5xl lead leading-tight font-medium">
           Speed up the input <br />
           with variable snippets
@@ -54,8 +54,8 @@ export default function Home() {
             <button className="btn">Add to Chrome</button>
           </a>
         </div>
-      </div>
-      <Section id="features" className="container !mt-36">
+      </Section>
+      <Section id="features" className="container !mt-36" delay={0.3}>
         <h2 className="hidden">Features</h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <FeatureCard
@@ -85,7 +85,7 @@ export default function Home() {
           />
         </div>
       </Section>
-      <Section id="playground" className="container">
+      <Section id="playground" className="container" delay={0.3}>
         <h2 className="text-4xl text-center text-content-100">Playground</h2>
         <p className="mx-auto mt-6 px-4 max-w-[660px] text-center text-content-300">
           You can experience the convenient variable snippets input in the playground. <br />
@@ -96,7 +96,7 @@ export default function Home() {
           <Playground></Playground>
         </div>
       </Section>
-      <Section className="container text-center">
+      <Section className="container text-center" delay={0.3}>
         <div className="flex justify-center items-center gap-4">
           <Image src="/logo-128.png" width={64} height={64} alt="logo"></Image>
           <h2 className="text-4xl">Ready for get started</h2>
