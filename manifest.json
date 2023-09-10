@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PromptSnippets",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "action": {},
   "icons": {
     "32": "logo-32.png",
@@ -27,6 +27,13 @@
     {
       "matches": ["<all_urls>"],
       "js": ["src/contentScript.tsx"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": ["<all_urls>"],
+      "resources": ["logo-32.png", "logo-64.png", "logo-128.png", "logo-256.png"],
+      "use_dynamic_url": true
     }
   ]
 }

@@ -30,7 +30,7 @@ export default function HelpPanel(props: { onClose: () => void }) {
             </p>
             <p>
               Select a snippet from the panel by clicking on it or using the arrow keys to navigate
-              and pressing Enter.
+              and pressing <KBD>Enter</KBD>.
             </p>
             <p>
               Use the <KBD>Tab</KBD> key to navigate between variables within the snippet.

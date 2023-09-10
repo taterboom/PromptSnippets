@@ -55,6 +55,7 @@ async function init() {
 
   // set listener
   chrome.action.onClicked.addListener((tab) => {
+    console.log("action", tab)
     if (tab.id) {
       chrome.tabs.sendMessage(tab.id!, { type: "prompt-snippets/toggle-menu" })
     }

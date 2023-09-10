@@ -212,7 +212,6 @@ function SnippetsPicker() {
   }, [candidateSnippets])
   useEffect(() => {
     if (activeId) {
-      console.log(activeId)
       const activeEl = document
         .getElementById(ROOT_ID)
         ?.shadowRoot?.querySelector("#ps-p-" + activeId)

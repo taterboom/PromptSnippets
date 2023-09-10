@@ -43,7 +43,7 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="text-sm flex-1 truncate">
+          <div className="text-sm flex-1 truncate text-left">
             <HighlightText
               text={props.data.name}
               positions={props.matches?.filter((match) => match.key === "name")?.[0]?.indices || []}
