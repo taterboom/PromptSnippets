@@ -9,49 +9,55 @@ import {
 import { ServerStore, Snippet } from "./types"
 import { getUriKey } from "./utils/uri"
 
-// should apply scripting permissions in manifest.json
-// // @ts-ignore
-// import contentScriptPath from "./contentScript?script"
-// chrome.scripting
-//   .executeScript({
-//     target: { tabId: tab.id! },
-//     files: [contentScriptPath],
-//   })
-//   .catch((err) => {
-//     console.log("!!", err)
-//   })
-
 let store: ServerStore
 
 async function init() {
   // init store
-  const {
-    isUsed = false,
-    disabledUrls = DEFAULT_DISABLED_URLS,
-    triggerSymbol = DEFAULT_TRIGGER_SYMBOL,
-    wrapperSymbol = DEFAULT_WRAPPER_SYMBOL,
-    ids = DEFAULT_IDS,
-  } = await chrome.storage.sync
-    .get(["isUsed", "disabledUrls", "triggerSymbol", "wrapperSymbol", "ids"])
-    .catch(() => ({} as any))
-  let snippetsStore: Record<string, Snippet> = {}
-  if (ids?.length > 0) {
-    snippetsStore = await chrome.storage.sync.get([...ids]).catch(() => ({} as any))
+  async function initStore() {
+    const {
+      isUsed = false,
+      disabledUrls = DEFAULT_DISABLED_URLS,
+      triggerSymbol = DEFAULT_TRIGGER_SYMBOL,
+      wrapperSymbol = DEFAULT_WRAPPER_SYMBOL,
+      ids = DEFAULT_IDS,
+    } = await chrome.storage.sync
+      .get(["isUsed", "disabledUrls", "triggerSymbol", "wrapperSymbol", "ids"])
+      .catch(() => ({} as any))
+    let snippetsStore: Record<string, Snippet> = {}
+    if (ids?.length > 0) {
+      snippetsStore = await chrome.storage.sync.get([...ids]).catch(() => ({} as any))
+    }
+    // init default snippet if not used before
+    if (!isUsed && ids?.length === 0) {
+      ids.push(DEFAULT_SNIPPET_GUIDE.id)
+      snippetsStore[DEFAULT_SNIPPET_GUIDE.id] = DEFAULT_SNIPPET_GUIDE
+      chrome.storage.sync.set({ isUsed: true })
+      chrome.storage.sync.set({ ids })
+      chrome.storage.sync.set({ [DEFAULT_SNIPPET_GUIDE.id]: DEFAULT_SNIPPET_GUIDE })
+    }
+    store = {
+      disabledUrls,
+      ids,
+      snippetsStore,
+      triggerSymbol,
+      wrapperSymbol,
+    }
+
+    sendInitStoreMessage()
   }
-  if (!isUsed && ids?.length === 0) {
-    ids.push(DEFAULT_SNIPPET_GUIDE.id)
-    snippetsStore[DEFAULT_SNIPPET_GUIDE.id] = DEFAULT_SNIPPET_GUIDE
-    chrome.storage.sync.set({ isUsed: true })
-    chrome.storage.sync.set({ ids })
-    chrome.storage.sync.set({ [DEFAULT_SNIPPET_GUIDE.id]: DEFAULT_SNIPPET_GUIDE })
+  async function sendInitStoreMessage() {
+    const tabs = await chrome.tabs.query({ active: true })
+    tabs.forEach((tab) => {
+      if (tab.id) {
+        chrome.tabs.sendMessage(tab.id, {
+          type: "prompt-snippets/init-store",
+          payload: store,
+        })
+      }
+    })
   }
-  store = {
-    disabledUrls,
-    ids,
-    snippetsStore,
-    triggerSymbol,
-    wrapperSymbol,
-  }
+
+  initStore()
 
   // set listener
   chrome.action.onClicked.addListener((tab) => {
@@ -111,7 +117,7 @@ async function init() {
       if (store) {
         sendResponse(store)
       } else {
-        init().then(() => {
+        initStore().then(() => {
           sendResponse(store)
         })
         return true

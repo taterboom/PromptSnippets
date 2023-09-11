@@ -19,6 +19,10 @@ export function useInit() {
       })
     }
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message?.type === "prompt-snippets/init-store") {
+        initState(message.payload)
+        setReady(true)
+      }
       if (message?.type === "prompt-snippets/update-store") {
         if (message?.payload) {
           initState(message.payload)
@@ -31,12 +35,18 @@ export function useInit() {
       }
     })
     const fetchStore = () => {
-      chrome.runtime.sendMessage({ type: "prompt-snippets/get-store" }).then((res) => {
-        if (res) {
-          initState(res)
-          setReady(true)
-        }
-      })
+      chrome.runtime
+        .sendMessage({ type: "prompt-snippets/get-store" })
+        .then((res) => {
+          if (res) {
+            initState(res)
+            setReady(true)
+          }
+        })
+        .catch((err) => {
+          // the background is inactive
+          // the background will send "prompt-snippets/init-store" message after active
+        })
     }
     fetchStore()
     document.addEventListener("visibilitychange", () => {

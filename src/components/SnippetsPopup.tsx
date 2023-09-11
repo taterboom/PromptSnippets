@@ -373,10 +373,11 @@ export default function SnippetsPopup() {
       setVisible(false)
       return
     }
+    const checkVisible = (text: string) => triggerSymbol.some((item) => text.startsWith?.(item))
+    setVisible(checkVisible(target?.value))
     const onChange = (e: any) => {
-      setVisible(triggerSymbol.some((item) => e?.target?.value?.startsWith?.(item)))
+      setVisible(checkVisible(e?.target?.value))
     }
-    onChange(target.value)
     target.addEventListener("input", onChange)
     target.addEventListener("change", onChange)
     return () => {
