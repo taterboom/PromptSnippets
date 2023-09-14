@@ -55,6 +55,18 @@ export default function Home() {
           </a>
         </div>
       </Section>
+      <Section delay={0.3}>
+        <div className="flex justify-center mb-16">
+          <iframe
+            className="w-[400px] h-[260px] sm:w-[600px] sm:h-[390px] lg:w-[800px] lg:h-[520px] 2xl:w-[1000px] 2xl:h-[650px]"
+            src="https://www.youtube.com/embed/1c5t9NQB9EU?si=xtu-aw8AVUvvf7Xp"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </Section>
       <Section id="features" className="container !mt-36" delay={0.3}>
         <h2 className="hidden">Features</h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

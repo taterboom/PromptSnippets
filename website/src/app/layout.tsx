@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "PromptSnippets",
-  description: "speed up the input with variable snippets",
+  description: "a chrome extension that speed up the input with variable snippets",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
