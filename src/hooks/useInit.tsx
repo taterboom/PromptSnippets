@@ -3,6 +3,7 @@ import { useSnippets } from "../store/snippets"
 import { usePageState } from "../store/pageState"
 import { ServerStore } from "../types"
 import { getUriKey } from "../utils/uri"
+import { COMMON_SETTINGS } from "../constants"
 
 export function useInit() {
   const [ready, setReady] = useState(false)
@@ -12,10 +13,14 @@ export function useInit() {
         ids: serverStore.ids,
         snippetsStore: serverStore.snippetsStore,
       })
+      const commonSettings = Object.keys(COMMON_SETTINGS).reduce((acc, key) => {
+        // @ts-ignore
+        acc[key] = serverStore[key]
+        return acc
+      }, {} as typeof COMMON_SETTINGS)
       usePageState.setState({
         disabled: serverStore.disabledUrls?.includes?.(getUriKey(window.location.href)) ?? true,
-        triggerSymbol: serverStore.triggerSymbol,
-        wrapperSymbol: serverStore.wrapperSymbol,
+        ...commonSettings,
       })
     }
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

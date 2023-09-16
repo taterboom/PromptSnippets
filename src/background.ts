@@ -1,10 +1,9 @@
 import { debounce } from "lodash"
 import {
+  COMMON_SETTINGS,
   DEFAULT_DISABLED_URLS,
   DEFAULT_IDS,
   DEFAULT_SNIPPET_GUIDE,
-  DEFAULT_TRIGGER_SYMBOL,
-  DEFAULT_WRAPPER_SYMBOL,
 } from "./constants"
 import { ServerStore, Snippet } from "./types"
 import { getUriKey } from "./utils/uri"
@@ -16,12 +15,11 @@ async function init() {
   async function initStore() {
     const {
       isUsed = false,
-      disabledUrls = DEFAULT_DISABLED_URLS,
-      triggerSymbol = DEFAULT_TRIGGER_SYMBOL,
-      wrapperSymbol = DEFAULT_WRAPPER_SYMBOL,
       ids = DEFAULT_IDS,
+      disabledUrls = DEFAULT_DISABLED_URLS,
+      ...commonSettings
     } = await chrome.storage.sync
-      .get(["isUsed", "disabledUrls", "triggerSymbol", "wrapperSymbol", "ids"])
+      .get(["isUsed", "ids", "disabledUrls", ...Object.keys(COMMON_SETTINGS)])
       .catch(() => ({} as any))
     let snippetsStore: Record<string, Snippet> = {}
     if (ids?.length > 0) {
@@ -36,11 +34,11 @@ async function init() {
       chrome.storage.sync.set({ [DEFAULT_SNIPPET_GUIDE.id]: DEFAULT_SNIPPET_GUIDE })
     }
     store = {
-      disabledUrls,
       ids,
       snippetsStore,
-      triggerSymbol,
-      wrapperSymbol,
+      disabledUrls,
+      ...COMMON_SETTINGS,
+      ...commonSettings,
     }
 
     sendInitStoreMessage()
@@ -70,14 +68,17 @@ async function init() {
   chrome.storage.sync.onChanged.addListener((changes) => {
     console.log("changes", changes)
     Object.entries(changes).forEach(([key, changeObj]) => {
-      if (key === "ids") {
-        store.ids = changeObj.newValue || DEFAULT_IDS
-      } else if (key === "disabledUrls") {
-        store.disabledUrls = changeObj.newValue || DEFAULT_DISABLED_URLS
-      } else if (key === "triggerSymbol") {
-        store.triggerSymbol = changeObj.newValue || DEFAULT_TRIGGER_SYMBOL
-      } else if (key === "wrapperSymbol") {
-        store.wrapperSymbol = changeObj.newValue || DEFAULT_WRAPPER_SYMBOL
+      for (const [commonSettingsKey, defaultValue] of Object.entries(COMMON_SETTINGS)) {
+        if (commonSettingsKey === key) {
+          // @ts-ignore
+          store[key] = changeObj.newValue ?? defaultValue
+          return
+        }
+      }
+      if (key === "disabledUrls") {
+        store.disabledUrls = changeObj.newValue ?? DEFAULT_DISABLED_URLS
+      } else if (key === "ids") {
+        store.ids = changeObj.newValue ?? DEFAULT_IDS
       } else {
         // snippetsStore
         if (changeObj.newValue) {

@@ -1,20 +1,17 @@
 import { create } from "zustand"
-import { DEFAULT_TRIGGER_SYMBOL, DEFAULT_WRAPPER_SYMBOL } from "../constants"
+import { COMMON_SETTINGS } from "../constants"
 
-type PageState = {
+type PageState = typeof COMMON_SETTINGS & {
   disabled: boolean
   currentInput: HTMLInputElement | HTMLTextAreaElement | null
   snippetsPopupVisible: boolean
   menuPanelVisible: boolean
   settingsPanelVisible: boolean
   helpPanelVisible: boolean
-  triggerSymbol: string[]
-  wrapperSymbol: string[]
   searchText: string
 
   updateDisabled: (disabled: boolean) => void
-  updateTriggerSymbol: (triggerSymbol: string[]) => void
-  updateWrapperSymbol: (wrapperSymbol: string[]) => void
+  updateCommonSettings: (settings: Partial<typeof COMMON_SETTINGS>) => void
 }
 
 export const usePageState = create<PageState>()((set) => ({
@@ -24,9 +21,8 @@ export const usePageState = create<PageState>()((set) => ({
   menuPanelVisible: false,
   settingsPanelVisible: false,
   helpPanelVisible: false,
-  triggerSymbol: DEFAULT_TRIGGER_SYMBOL,
-  wrapperSymbol: DEFAULT_WRAPPER_SYMBOL,
   searchText: "",
+  ...COMMON_SETTINGS,
 
   updateDisabled: (disabled) => {
     set({ disabled })
@@ -37,12 +33,9 @@ export const usePageState = create<PageState>()((set) => ({
       },
     })
   },
-  updateTriggerSymbol: (triggerSymbol) => {
-    set({ triggerSymbol })
-    chrome.storage.sync.set({ triggerSymbol })
-  },
-  updateWrapperSymbol: (wrapperSymbol) => {
-    set({ wrapperSymbol })
-    chrome.storage.sync.set({ wrapperSymbol })
+
+  updateCommonSettings: (settings: Partial<typeof COMMON_SETTINGS>) => {
+    set(settings)
+    chrome.storage.sync.set(settings)
   },
 }))

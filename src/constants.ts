@@ -1,9 +1,18 @@
+import { InputMode } from "./types"
+
 export const ROOT_ID = "__prompt-snippets-root"
 export const DEFAULT_IDS = []
 export const DEFAULT_SNIPPETS_STORE = {}
 export const DEFAULT_DISABLED_URLS = []
 export const DEFAULT_TRIGGER_SYMBOL = ["/", "、"]
 export const DEFAULT_WRAPPER_SYMBOL = ["{{ }}"]
+export const DEFAULT_INPUT_MODE: InputMode = "Tab"
+
+export const COMMON_SETTINGS = {
+  triggerSymbol: DEFAULT_TRIGGER_SYMBOL,
+  wrapperSymbol: DEFAULT_WRAPPER_SYMBOL,
+  inputMode: DEFAULT_INPUT_MODE as InputMode,
+}
 
 export const DEFAULT_SNIPPET_GUIDE = {
   id: "default-snippet-guide",

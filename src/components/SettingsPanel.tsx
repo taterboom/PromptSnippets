@@ -4,6 +4,7 @@ import { getUriKey } from "../utils/uri"
 import { PopupContainer } from "./UI/Popup"
 import { MiClose, MiDelete, MiRemove } from "./UI/icons"
 import { PropsWithChildren, useState } from "react"
+import { InputMode } from "../types"
 
 function EnableSection() {
   const disabled = usePageState((state) => state.disabled)
@@ -33,9 +34,37 @@ function EnableSection() {
   )
 }
 
+function InputModeSection() {
+  const inputMode = usePageState((state) => state.inputMode)
+  const updateCommonSettings = usePageState((state) => state.updateCommonSettings)
+
+  return (
+    <div className="p-2 hover:bg-base-200">
+      <div className="flex gap-2">
+        <div className="flex-1 overflow-hidden">
+          <div className="text-sm text-content-100 break-words">Variables Input Mode</div>
+          <div className="text-xs text-content-400 break-words">
+            Use the tab key or the popup box to input the variables.
+          </div>
+        </div>
+        <div className="flex-shrink-0 pt-0.5">
+          <select
+            className="text-xs bg-base-200 text-content-200 border border-neutral-200 rounded transition-colors hover:border-neutral-300 focus-visible:outline-none"
+            value={inputMode}
+            onChange={(e) => updateCommonSettings({ inputMode: e.target.value as InputMode })}
+          >
+            <option value="Tab">Tab</option>
+            <option value="Popup">Popup</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function WrapperSymbolSection() {
   const wrapperSymbol = usePageState((state) => state.wrapperSymbol)
-  const updateWrapperSymbol = usePageState((state) => state.updateWrapperSymbol)
+  const updateCommonSettings = usePageState((state) => state.updateCommonSettings)
   const [createPopupVisible, setCreatePopupVisible] = useState(false)
   return (
     <>
@@ -67,7 +96,9 @@ function WrapperSymbolSection() {
               <button
                 className="btn btn-icon btn-ghost !text-danger-100"
                 onClick={() => {
-                  updateWrapperSymbol(wrapperSymbol.filter((_, i) => i !== index))
+                  updateCommonSettings({
+                    wrapperSymbol: wrapperSymbol.filter((_, i) => i !== index),
+                  })
                 }}
               >
                 <MiRemove />
@@ -84,7 +115,7 @@ function WrapperSymbolSection() {
             }}
             onSave={(value) => {
               setCreatePopupVisible(false)
-              updateWrapperSymbol([value, ...wrapperSymbol])
+              updateCommonSettings({ wrapperSymbol: [value, ...wrapperSymbol] })
             }}
           />
         )}
@@ -122,7 +153,7 @@ function WrapperSymbolEditor(props: { onCancel: () => void; onSave: (value: stri
 
 function TriggerSymbolSection() {
   const triggerSymbol = usePageState((state) => state.triggerSymbol)
-  const updateTriggerSymbol = usePageState((state) => state.updateTriggerSymbol)
+  const updateCommonSettings = usePageState((state) => state.updateCommonSettings)
   const [createPopupVisible, setCreatePopupVisible] = useState(false)
   return (
     <>
@@ -154,7 +185,9 @@ function TriggerSymbolSection() {
               <button
                 className="btn btn-ghost btn-icon !text-danger-100"
                 onClick={() => {
-                  updateTriggerSymbol(triggerSymbol.filter((_, i) => i !== index))
+                  updateCommonSettings({
+                    triggerSymbol: triggerSymbol.filter((_, i) => i !== index),
+                  })
                 }}
               >
                 <MiRemove />
@@ -171,7 +204,7 @@ function TriggerSymbolSection() {
             }}
             onSave={(value) => {
               setCreatePopupVisible(false)
-              updateTriggerSymbol([value, ...triggerSymbol])
+              updateCommonSettings({ triggerSymbol: [value, ...triggerSymbol] })
             }}
           />
         )}
@@ -216,6 +249,7 @@ export default function SettingsPanel(props: { onClose: () => void }) {
       </div>
       <div className="divide-y divide-neutral-100">
         <EnableSection />
+        <InputModeSection />
         <WrapperSymbolSection />
         <TriggerSymbolSection />
       </div>

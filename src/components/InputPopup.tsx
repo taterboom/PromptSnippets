@@ -1,0 +1,91 @@
+import clsx from "classnames"
+import { useEffect, useMemo, useRef } from "react"
+import { usePageState } from "../store/pageState"
+import { Snippet } from "../types"
+import { getSnippetChunks, getVariables } from "../utils/range"
+import Expandable from "./UI/Expandable"
+import { PopupContainer } from "./UI/Popup"
+
+type InputPopupProps = {
+  snippet: Snippet
+  onClose?: () => void
+  onSubmit?: (text: string) => void
+}
+
+export function InputPopup(props: InputPopupProps) {
+  const elRef = useRef<HTMLDivElement | null>(null)
+  const values: Array<string | undefined> = []
+  const variables = useMemo(() => {
+    return getVariables(props.snippet.content, usePageState.getState().wrapperSymbol)
+  }, [props.snippet.content])
+  const submitRef = useRef<any>()
+  submitRef.current = () => {
+    props.onSubmit?.(
+      getSnippetChunks(props.snippet.content, usePageState.getState().wrapperSymbol)
+        .map((item) => {
+          if (item.type === "variable") {
+            const index = variables.indexOf(item.variable.name)
+            const text = values[index]
+            return text || ""
+          } else {
+            return item.content
+          }
+        })
+        .join("")
+    )
+  }
+  useEffect(() => {
+    elRef.current?.querySelector("input")?.focus()
+    const onKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault()
+        e.stopPropagation()
+        submitRef.current?.()
+      }
+    }
+    document.addEventListener("keydown", onKeydown, { capture: true })
+    return () => {
+      document.removeEventListener("keydown", onKeydown, { capture: true })
+    }
+  }, [])
+  return (
+    <PopupContainer wrapperClassName="min-w-[448px] sm:max-w-lg" onClick={props.onClose}>
+      <form className="space-y-4">
+        <div>
+          <div className={clsx("group space-y-1")}>
+            <div className="flex items-center gap-2 overflow-hidden font-medium">
+              {props.snippet.name}
+            </div>
+            <Expandable className="text-xs text-content-300 transition-all">
+              {props.snippet.content}
+            </Expandable>
+          </div>
+          <div className="mt-4 mb-3 border-b border-neutral-200"></div>
+          <div ref={elRef} className="space-y-1.5">
+            {variables.map((variable, index) => (
+              <div key={index} className="space-y-1">
+                <div className="text-sm">{variable}</div>
+                <div className="">
+                  <input
+                    className="w-full p-1 text-sm block bg-base-200 text-content-200 border border-neutral-200 rounded py-1 px-2 focus:border-primary-100 focus-visible:outline-none"
+                    onChange={(e) => {
+                      values[index] = e.target.value
+                    }}
+                  ></input>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 items-center">
+          <button className="btn" onClick={props.onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={submitRef.current}>
+            Submit
+          </button>
+        </div>
+      </form>
+    </PopupContainer>
+  )
+}
