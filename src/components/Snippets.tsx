@@ -1,46 +1,27 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import clsx from "classnames"
+import { AnimatePresence } from "framer-motion"
+import Fuse from "fuse.js"
+import { useLayoutEffect, useMemo, useRef, useState } from "react"
+import { usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
 import { Snippet } from "../types"
-import clsx from "classnames"
-import { AnimatePresence, motion } from "framer-motion"
-import { MiDelete, MiEdit, TablerMoodEmptyFilled } from "./UI/icons"
-import SnippetEditor from "./SnippetEditor"
 import SnippetsDeleter from "./SnippetDeleter"
-import KBD from "./UI/KBD"
-import Fuse from "fuse.js"
-import { usePageState } from "../store/pageState"
+import SnippetEditor from "./SnippetEditor"
+import Expandable from "./UI/Expandable"
 import HighlightText from "./UI/HighlightText"
-
-function useIsFirstMount() {
-  const isFirst = useRef(true)
-  if (isFirst.current) {
-    isFirst.current = false
-    return true
-  }
-  return isFirst.current
-}
+import KBD from "./UI/KBD"
+import { MiDelete, MiEdit, TablerMoodEmptyFilled } from "./UI/icons"
 
 function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultMatch[] }) {
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const isFirst = useIsFirstMount()
-  const [expanded, setExpanded] = useState(true)
-  const elRef = useRef<HTMLDivElement>(null)
-  const heightRef = useRef(0)
-
-  useLayoutEffect(() => {
-    heightRef.current = elRef.current!.clientHeight
-    setExpanded(false)
-  }, [])
 
   const active = editing || deleting
-  const canZoom = heightRef.current > 20
 
   return (
     <>
       <div
         className={clsx("group py-3 px-4 hover:bg-base-300 space-y-[3px]", active && "bg-base-300")}
-        onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2 overflow-hidden">
           <div className="text-sm flex-1 truncate text-left">
@@ -76,22 +57,14 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
             </button>
           </div>
         </div>
-        <div
-          className={clsx(
-            "text-xs text-content-300 transition-all",
-            !expanded && "truncate",
-            canZoom ? (expanded ? "cursor-zoom-out" : "cursor-zoom-in") : "cursor-default"
-          )}
-          ref={elRef}
-          style={{ height: isFirst ? "auto" : expanded ? heightRef.current : 16 }}
-        >
+        <Expandable className="text-xs text-content-300 transition-all">
           <HighlightText
             text={props.data.content}
             positions={
               props.matches?.filter((match) => match.key === "content")?.[0]?.indices || []
             }
           ></HighlightText>
-        </div>
+        </Expandable>
       </div>
       <AnimatePresence>
         {editing && (

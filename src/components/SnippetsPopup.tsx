@@ -3,7 +3,13 @@ import clsx from "classnames"
 import { motion, AnimatePresence } from "framer-motion"
 import { usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
-import { awesomeSetSelectionRange, selectNextRange, setInputValue } from "../utils/range"
+import {
+  awesomeSetSelectionRange,
+  getSnippetChunks,
+  getVariables,
+  selectNextRange,
+  setInputValue,
+} from "../utils/range"
 import KBD from "./UI/KBD"
 import Fuse from "fuse.js"
 import { Snippet } from "../types"
@@ -11,6 +17,8 @@ import { MiArrowDown, MiArrowUp, MiEnter, TablerMoodEmptyFilled } from "./UI/ico
 import HighlightText from "./UI/HighlightText"
 import { ROOT_ID } from "../constants"
 import { throttle } from "lodash"
+import { InputPopup } from "./InputPopup"
+import { useIsUnmount } from "../hooks/useIsUnmount"
 
 function NoSnippets() {
   return (
@@ -123,14 +131,20 @@ const formatSearchText = (triggerSymbol: string[], text: string) => {
 }
 
 function SnippetsPicker() {
+  const isUnmountRef = useIsUnmount()
   const snippets = useSnippets(snippetsSelectors.snippets)
   const target = usePageState((state) => state.currentInput)
+  const triggerSymbol = usePageState((state) => state.triggerSymbol)
+  const wrapperSymbol = usePageState((state) => state.wrapperSymbol)
+  const inputMode = usePageState((state) => state.inputMode)
   const [activeId, setActiveId] = useState<string | null>(null)
   const activeIdRef = useRef(activeId)
   activeIdRef.current = activeId
   const [text, setText] = useState<string | null>(
-    target ? formatSearchText(usePageState.getState().triggerSymbol, target.value) : null
+    target ? formatSearchText(triggerSymbol, target.value) : null
   )
+  const [currentSelectedSnippet, setCurrentSelectedSnippet] = useState<Snippet | null>(null)
+  const [popupActive, setPopupActive] = useState(true)
   const fuseInstance = useMemo(() => {
     return new Fuse<Snippet>(snippets, {
       includeMatches: true,
@@ -149,9 +163,14 @@ function SnippetsPicker() {
   applySnippetRef.current = () => {
     const snippet = snippets.find((item) => item.id === activeIdRef.current)
     if (snippet && target) {
-      setInputValue(target, snippet.content)
-      if (!selectNextRange(usePageState.getState().wrapperSymbol, target)) {
-        awesomeSetSelectionRange(target, snippet.content.length, snippet.content.length)
+      if (inputMode === "Popup" && getVariables(snippet.content, wrapperSymbol).length > 0) {
+        setCurrentSelectedSnippet(snippet)
+        setPopupActive(false)
+      } else {
+        setInputValue(target, snippet.content)
+        if (!selectNextRange(wrapperSymbol, target)) {
+          awesomeSetSelectionRange(target, snippet.content.length, snippet.content.length)
+        }
       }
     }
   }
@@ -161,11 +180,7 @@ function SnippetsPicker() {
       return
     }
     const onChange = (e: any) => {
-      setText(
-        e?.target?.value
-          ? formatSearchText(usePageState.getState().triggerSymbol, e.target.value)
-          : null
-      )
+      setText(e?.target?.value ? formatSearchText(triggerSymbol, e.target.value) : null)
     }
     target.addEventListener("input", onChange)
     target.addEventListener("change", onChange)
@@ -173,8 +188,9 @@ function SnippetsPicker() {
       target.removeEventListener("input", onChange)
       target.removeEventListener("change", onChange)
     }
-  }, [target])
+  }, [target, triggerSymbol])
   useEffect(() => {
+    if (!popupActive) return
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
         e.preventDefault()
@@ -202,7 +218,7 @@ function SnippetsPicker() {
     return () => {
       document.removeEventListener("keydown", onKeyDown, { capture: true })
     }
-  }, [snippets, target])
+  }, [popupActive, snippets, target])
   useEffect(() => {
     if (candidateSnippets[0]?.matches) {
       setActiveId(candidateSnippets[0]?.item.id)
@@ -239,7 +255,11 @@ function SnippetsPicker() {
           </button>
         </Container>
       ) : (
-        <div className="relative">
+        <motion.div
+          className="relative"
+          variants={{ active: { opacity: 1 }, inactive: { opacity: 0 } }}
+          animate={popupActive ? "active" : "inactive"}
+        >
           <Container className="flex flex-col">
             <>
               <div className="p-1 flex-1 overflow-y-auto">
@@ -304,8 +324,33 @@ function SnippetsPicker() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       )}
+      <AnimatePresence>
+        {currentSelectedSnippet && (
+          <InputPopup
+            snippet={currentSelectedSnippet}
+            onClose={() => {
+              setCurrentSelectedSnippet(null)
+              setPopupActive(true)
+            }}
+            onSubmit={(text) => {
+              setCurrentSelectedSnippet(null)
+              setTimeout(() => {
+                if (target) {
+                  setInputValue(target, text)
+                  awesomeSetSelectionRange(target, text.length, text.length)
+                }
+                setTimeout(() => {
+                  if (!isUnmountRef.current) {
+                    setPopupActive(true)
+                  }
+                }, 300)
+              }, 55)
+            }}
+          ></InputPopup>
+        )}
+      </AnimatePresence>
     </>
   )
 }
