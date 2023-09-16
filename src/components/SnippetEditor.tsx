@@ -5,6 +5,7 @@ import { PopupContainer } from "./UI/Popup"
 import { usePageState } from "../store/pageState"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./UI/Tooltip"
 import { MiCircleHelp } from "./UI/icons"
+import { VARIABLE_DEFAULT_VALUE_SEPARATOR } from "../constants"
 
 type SnippetEditorProps = {
   id?: string
@@ -36,7 +37,8 @@ export default function SnippetEditor(props: SnippetEditorProps) {
           </Tooltip>
         </div>
         <input
-          placeholder="e.g. translate"
+          tabIndex={1}
+          placeholder="e.g. Summarize"
           type="text"
           className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
           value={name}
@@ -53,13 +55,14 @@ export default function SnippetEditor(props: SnippetEditorProps) {
               <MiCircleHelp className="text-xs text-content-400" />
             </TooltipTrigger>
             <TooltipContent className="text-xs text-content-200 w-60 z-[1000000] bg-base-100/10 backdrop-blur border border-neutral-200 p-2 rounded menu-popup-shadow">
-              {`The snippet content. wrap variable values with ${wrapper[0]}VariableName${wrapper[1]}`}
+              {`The snippet content. Use ${wrapper[0]}variable${wrapper[1]} to define a variable, or use ${wrapper[0]}variable${VARIABLE_DEFAULT_VALUE_SEPARATOR}defaultValue${wrapper[1]} to define variable and it's default value.`}
             </TooltipContent>
           </Tooltip>
         </div>
         <textarea
+          tabIndex={2}
           className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
-          placeholder={`e.g. Translate the text to ${wrapper[0]}language${wrapper[1]}: ${wrapper[0]}text${wrapper[1]}`}
+          placeholder={`e.g. Summarize the text in ${wrapper[0]}count${VARIABLE_DEFAULT_VALUE_SEPARATOR}10${wrapper[1]} words: ${wrapper[0]}text${wrapper[1]}`}
           cols={36}
           rows={3}
           value={content}
@@ -71,8 +74,13 @@ export default function SnippetEditor(props: SnippetEditorProps) {
           Cancel
         </button>
         <button
+          tabIndex={3}
           className="btn btn-primary"
           onClick={() => {
+            if (!(name && content)) {
+              alert('Please fill in "Prefix" and "Content"')
+              return
+            }
             const snippet = { name: name, content: content }
             if (currentSnippet) {
               updateSnippet({ ...currentSnippet, ...snippet })

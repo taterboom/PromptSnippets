@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { ROOT_ID } from "../constants"
 import { usePageState } from "../store/pageState"
 import { selectNextRange } from "../utils/range"
+import { processVariableSelection } from "../utils/snippet"
 
 export default function () {
   const disabled = usePageState((state) => state.disabled)
@@ -27,7 +28,7 @@ export default function () {
         usePageState.setState({ currentInput: target })
         if (e.key === "Tab") {
           e.preventDefault()
-          selectNextRange(usePageState.getState().wrapperSymbol, target)
+          selectNextRange(usePageState.getState().wrapperSymbol, target, processVariableSelection)
         }
       } else {
         // usePageState.setState({ currentInput: null })

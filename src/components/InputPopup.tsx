@@ -2,9 +2,9 @@ import clsx from "classnames"
 import { useEffect, useMemo, useRef } from "react"
 import { usePageState } from "../store/pageState"
 import { Snippet } from "../types"
-import { getSnippetChunks, getVariables } from "../utils/range"
 import Expandable from "./UI/Expandable"
 import { PopupContainer } from "./UI/Popup"
+import { getSnippetChunks, getVariables } from "../utils/snippet"
 
 type InputPopupProps = {
   snippet: Snippet
@@ -14,7 +14,7 @@ type InputPopupProps = {
 
 export function InputPopup(props: InputPopupProps) {
   const elRef = useRef<HTMLDivElement | null>(null)
-  const values: Array<string | undefined> = []
+  const values = useRef<Array<string | undefined>>([])
   const variables = useMemo(() => {
     return getVariables(props.snippet.content, usePageState.getState().wrapperSymbol)
   }, [props.snippet.content])
@@ -24,9 +24,9 @@ export function InputPopup(props: InputPopupProps) {
       getSnippetChunks(props.snippet.content, usePageState.getState().wrapperSymbol)
         .map((item) => {
           if (item.type === "variable") {
-            const index = variables.indexOf(item.variable.name)
-            const text = values[index]
-            return text || ""
+            const index = variables.findIndex((variable) => item.variable.name === variable.name)
+            const text = values.current[index]
+            return text || variables[index].defaultValue || ""
           } else {
             return item.content
           }
@@ -64,12 +64,13 @@ export function InputPopup(props: InputPopupProps) {
           <div ref={elRef} className="space-y-1.5">
             {variables.map((variable, index) => (
               <div key={index} className="space-y-1">
-                <div className="text-sm">{variable}</div>
+                <div className="text-sm">{variable.name}</div>
                 <div className="">
                   <input
                     className="w-full p-1 text-sm block bg-base-200 text-content-200 border border-neutral-200 rounded py-1 px-2 focus:border-primary-100 focus-visible:outline-none"
+                    defaultValue={variable.defaultValue}
                     onChange={(e) => {
-                      values[index] = e.target.value
+                      values.current[index] = e.target.value
                     }}
                   ></input>
                 </div>

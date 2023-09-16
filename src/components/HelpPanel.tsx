@@ -33,7 +33,8 @@ export default function HelpPanel(props: { onClose: () => void }) {
               and pressing <KBD>Enter</KBD>.
             </p>
             <p>
-              Use the <KBD>Tab</KBD> key to navigate between variables within the snippet.
+              You can choose using the <KBD>Tab</KBD> key to navigate between variables within the
+              snippet or input variables in a popup box.
             </p>
           </div>
         </div>
