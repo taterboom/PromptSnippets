@@ -1,11 +1,6 @@
-export const parseWrapperSymbol = (wrapperSymbol: string) => {
-  return wrapperSymbol
-    .trim()
-    .split(/\s+/)
-    .map((item) => item.trim())
-}
+import { parseWrapperSymbol } from "./snippet"
 
-type RangeObj = {
+export type RangeObj = {
   range: [number, number]
   wrapper: string
 }
@@ -48,16 +43,26 @@ export const awesomeSetSelectionRange = async (
   inputEl.setSelectionRange(start, end)
 }
 
-export const selectNextRange = (
+export type SelectNextRangeProcess = (
+  nextRange: RangeObj,
   wrapperSymbol: string[],
   inputEl: HTMLInputElement | HTMLTextAreaElement
+) => [number, number] | void
+
+export const selectNextRange = (
+  wrapperSymbol: string[],
+  inputEl: HTMLInputElement | HTMLTextAreaElement,
+  process?: SelectNextRangeProcess
 ) => {
   const nextRange = getNextRange(wrapperSymbol, inputEl.value)
   if (nextRange) {
-    awesomeSetSelectionRange(inputEl, nextRange.range[0], nextRange.range[1])
+    const range = process?.(nextRange, wrapperSymbol, inputEl) ?? nextRange.range
+    awesomeSetSelectionRange(inputEl, range[0], range[1])
     return true
+  } else {
+    awesomeSetSelectionRange(inputEl, inputEl.value.length, inputEl.value.length)
+    return false
   }
-  return false
 }
 
 export const setInputValue = (inputEl: HTMLInputElement | HTMLTextAreaElement, value: string) => {
@@ -68,70 +73,4 @@ export const setInputValue = (inputEl: HTMLInputElement | HTMLTextAreaElement, v
     cancelable: true,
   })
   inputEl.dispatchEvent(inputEvent)
-}
-
-export type SnippetChunk =
-  | {
-      type: "raw"
-      content: string
-    }
-  | {
-      type: "variable"
-      content: string
-      variable: {
-        name: string
-        range: RangeObj
-      }
-    }
-
-export function getSnippetChunks(snippetContent: string, wrapperSymbol: string[]) {
-  const snippetChunks: SnippetChunk[] = []
-  let lastIndex = 0
-  while (lastIndex < snippetContent.length) {
-    const fakeText =
-      Array.from({ length: lastIndex })
-        .map(() => " ")
-        .join("") + snippetContent.slice(lastIndex)
-    const nextRange = getNextRange(wrapperSymbol, fakeText)
-    if (nextRange) {
-      if (lastIndex < nextRange.range[0]) {
-        const rawContent = snippetContent.slice(lastIndex, nextRange.range[0])
-        snippetChunks.push({
-          type: "raw",
-          content: rawContent,
-        })
-      }
-      const [left, right] = parseWrapperSymbol(nextRange.wrapper)
-      const name = snippetContent
-        .slice(nextRange.range[0] + left.length, nextRange.range[1] - right.length)
-        .trim()
-      snippetChunks.push({
-        type: "variable",
-        content: snippetContent.slice(nextRange.range[0], nextRange.range[1]),
-        variable: {
-          name,
-          range: nextRange,
-        },
-      })
-      lastIndex = nextRange.range[1]
-    } else {
-      const rawContent = snippetContent.slice(lastIndex)
-      snippetChunks.push({
-        type: "raw",
-        content: rawContent,
-      })
-      break
-    }
-  }
-  return snippetChunks
-}
-
-export const getVariables = (snippetContent: string, wrapperSymbol: string[]) => {
-  const chunks = getSnippetChunks(snippetContent, wrapperSymbol)
-  return chunks.reduce((acc, curr) => {
-    if (curr.type === "variable" && !acc.includes(curr.variable!.name)) {
-      acc.push(curr.variable!.name)
-    }
-    return acc
-  }, [] as string[])
 }

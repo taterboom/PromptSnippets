@@ -13,4 +13,7 @@ export default defineConfig({
   //   },
   // },
   plugins: [react(), crx({ manifest })],
+  test: {
+    environment: "happy-dom",
+  },
 })

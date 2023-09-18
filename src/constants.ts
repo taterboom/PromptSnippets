@@ -32,3 +32,5 @@ export const DEFAULT_SNIPPET_DEMO_2 = {
   name: "Summary",
   content: "summarize the text in {{number}} words: {{text}}",
 }
+
+export const VARIABLE_DEFAULT_VALUE_SEPARATOR = ":"
