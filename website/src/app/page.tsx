@@ -17,15 +17,15 @@ export default function Home() {
           <nav className="flex items-center gap-6">
             <a
               className="text-sm text-content-300/90 hover:text-content-100 transition-colors"
-              href="#features"
-            >
-              Features
-            </a>
-            <a
-              className="text-sm text-content-300/90 hover:text-content-100 transition-colors"
               href="#playground"
             >
               Playground
+            </a>
+            <a
+              className="text-sm text-content-300/90 hover:text-content-100 transition-colors"
+              href="/changelog"
+            >
+              Changelog
             </a>
             {/* <a className="text-sm text-content-300/90 hover:text-content-100 transition-colors">
               Blog
@@ -119,7 +119,7 @@ export default function Home() {
       </Section>
       <div className="container divide"></div>
       <footer className="container flex justify-between items-center text-content-400 py-6 !mt-0">
-        <div className="text-sm">MIT © 2023 PromptSnippets</div>
+        <div className="text-sm">MIT © {new Date().getFullYear()} PromptSnippets</div>
         <div className="flex items-center gap-4 text-lg">
           <span className="text-sm">Contact</span>
           <a href="mailto:xuebagod@gmail.com">

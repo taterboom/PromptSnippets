@@ -7,10 +7,12 @@ import { MiCircleHelp, MiAdd, MiClose, MiSearch, MiSettings } from "./UI/icons"
 import SettingsPanel from "./SettingsPanel"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
 import HelpPanel from "./HelpPanel"
+import { useNew } from "../hooks/useNew"
 
 function Header(props: { onCreate?: () => void }) {
   const searchText = usePageState((state) => state.searchText)
   const snippes = useSnippets(snippetsSelectors.snippets)
+  const [showNew, closeNew] = useNew()
   return (
     <div>
       <div className="flex justify-between p-4">
@@ -18,6 +20,18 @@ function Header(props: { onCreate?: () => void }) {
           <img width={24} height={24} src={chrome.runtime.getURL("logo-128.png")} alt="" />
         </div>
         <div className="flex items-center gap-2">
+          {showNew && (
+            <button
+              className="text-xs text-danger-100 !text-[10px] hover:text-danger-200"
+              onClick={() => {
+                closeNew()
+                chrome.runtime.sendMessage({ type: "prompt-snippets/close-new" })
+                window.open("https://promptsnippets.top/changelog?from=extension")
+              }}
+            >
+              NEW
+            </button>
+          )}
           <button
             className="btn btn-icon btn-ghost"
             onClick={() => {
