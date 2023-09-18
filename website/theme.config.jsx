@@ -13,7 +13,7 @@ export default {
         lineHeight: "1.75rem",
       }}
     >
-      <Image src="/logo-128.png" width={48} height={48} alt="logo"></Image>
+      <Image src="/logo-128.png" width={40} height={40} alt="logo"></Image>
       PromptSnippets
     </div>
   ),
