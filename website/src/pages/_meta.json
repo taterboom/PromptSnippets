@@ -1,0 +1,10 @@
+{
+  "docs": {
+    "title": "Document",
+    "type": "page"
+  },
+  "changelog": {
+    "title": "Changelog",
+    "type": "page"
+  }
+}
