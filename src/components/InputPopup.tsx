@@ -50,43 +50,41 @@ export function InputPopup(props: InputPopupProps) {
   }, [])
   return (
     <PopupContainer wrapperClassName="min-w-[448px] sm:max-w-lg" onClick={props.onClose}>
-      <form className="space-y-4">
-        <div>
-          <div className={clsx("group space-y-1")}>
-            <div className="flex items-center gap-2 overflow-hidden font-medium">
-              {props.snippet.name}
-            </div>
-            <Expandable className="text-xs text-content-300 transition-all">
-              {props.snippet.content}
-            </Expandable>
+      <div>
+        <div className={clsx("group space-y-1")}>
+          <div className="flex items-center gap-2 overflow-hidden font-medium">
+            {props.snippet.name}
           </div>
-          <div className="mt-4 mb-3 border-b border-neutral-200"></div>
-          <div ref={elRef} className="space-y-1.5">
-            {variables.map((variable, index) => (
-              <div key={index} className="space-y-1">
-                <div className="text-sm">{variable.name}</div>
-                <div className="">
-                  <input
-                    className="w-full p-1 text-sm block bg-base-200 text-content-200 border border-neutral-200 rounded py-1 px-2 focus:border-primary-100 focus-visible:outline-none"
-                    defaultValue={variable.defaultValue}
-                    onChange={(e) => {
-                      values.current[index] = e.target.value
-                    }}
-                  ></input>
-                </div>
+          <Expandable className="text-xs text-content-300 transition-all">
+            {props.snippet.content}
+          </Expandable>
+        </div>
+        <div className="mt-4 mb-3 border-b border-neutral-200"></div>
+        <div ref={elRef} className="space-y-1.5">
+          {variables.map((variable, index) => (
+            <div key={index} className="space-y-1">
+              <div className="text-sm">{variable.name}</div>
+              <div className="">
+                <input
+                  className="w-full p-1 text-sm block bg-base-200 text-content-200 border border-neutral-200 rounded py-1 px-2 focus:border-primary-100 focus-visible:outline-none"
+                  defaultValue={variable.defaultValue}
+                  onChange={(e) => {
+                    values.current[index] = e.target.value
+                  }}
+                ></input>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-        <div className="flex justify-end gap-2 items-center">
-          <button className="btn" onClick={props.onClose}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" onClick={submitRef.current}>
-            Submit
-          </button>
-        </div>
-      </form>
+      </div>
+      <div className="flex justify-end gap-2 items-center">
+        <button className="btn" onClick={props.onClose}>
+          Cancel
+        </button>
+        <button className="btn btn-primary" onClick={submitRef.current}>
+          Submit
+        </button>
+      </div>
     </PopupContainer>
   )
 }
