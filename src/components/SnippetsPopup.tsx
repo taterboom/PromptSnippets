@@ -3,13 +3,7 @@ import clsx from "classnames"
 import { motion, AnimatePresence } from "framer-motion"
 import { usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
-import {
-  awesomeSetSelectionRange,
-  getSnippetChunks,
-  getVariables,
-  selectNextRange,
-  setInputValue,
-} from "../utils/range"
+import { awesomeSetSelectionRange, selectNextRange, setInputValue } from "../utils/range"
 import KBD from "./UI/KBD"
 import Fuse from "fuse.js"
 import { Snippet } from "../types"
@@ -19,6 +13,7 @@ import { ROOT_ID } from "../constants"
 import { throttle } from "lodash"
 import { InputPopup } from "./InputPopup"
 import { useIsUnmount } from "../hooks/useIsUnmount"
+import { getVariables } from "../utils/snippet"
 
 function NoSnippets() {
   return (
@@ -168,9 +163,7 @@ function SnippetsPicker() {
         setPopupActive(false)
       } else {
         setInputValue(target, snippet.content)
-        if (!selectNextRange(wrapperSymbol, target)) {
-          awesomeSetSelectionRange(target, snippet.content.length, snippet.content.length)
-        }
+        selectNextRange(wrapperSymbol, target)
       }
     }
   }
