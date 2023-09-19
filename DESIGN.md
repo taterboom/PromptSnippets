@@ -16,5 +16,6 @@ App
   - Trigger
   - Select
   - InputPopup
+- Dark/Light Mode
 
 🟡 remove console.log in cs!

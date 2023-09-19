@@ -1,3 +1,7 @@
+import YtbVideo from "@/components/docs/YtbVideo"
+import { Text2 } from "@/components/docs/Typography"
+import Image from "next/image"
+
 # CHANGELOG
 
 ## 🔥 0.1.0
@@ -7,9 +11,19 @@ _2023-09-18_
 ### Added
 
 - Popup box for variables input [#2](https://github.com/taterboom/PromptSnippets/pull/2)<br/>
-  test
 
-- Support default value for variables [#3](https://github.com/taterboom/PromptSnippets/pull/3)
+  <Text2>You can choose the `Popup` input mode in the settings</Text2>
+  <Image src="/docs/0-1-0_1.png" width={320} height={164} />
+  <Text2>Then you can input variables in a popup box</Text2>
+  <Image src="/docs/0-1-0_2.png" width={420} height={238} />
+
+- Support default value for variables [#3](https://github.com/taterboom/PromptSnippets/pull/3)<br/>
+  <Text2>Use `{{name|default}}` to set default value for variable `name`</Text2>
+  <Image src="/docs/0-1-0_3.png" width={360} height={270} />
+  <Text2>The default value will be used in the popup box</Text2>
+  <YtbVideo src="https://www.youtube.com/embed/TDWsW979QkY?si=qHgimXCvKq_ZGP3C"></YtbVideo>
+  <Text2>Or you can use **double** `Tab` to input the default value if you prefer the `Tab` input mode.</Text2>
+  <YtbVideo src="https://www.youtube.com/embed/zqO80CWXw-Y?si=_aXwfosHcREx6s9I"></YtbVideo>
 
 ### Changed
 
