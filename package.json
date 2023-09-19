@@ -1,7 +1,7 @@
 {
   "name": "promptsnippets",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "test": "vitest run",
@@ -9,7 +9,8 @@
     "build": "tsc && vite build",
     "build:web": "vite build -c vite.config.web.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "changeset:version": "npx changeset version && node ./scripts/syncVersion.mjs && pnpm build"
   },
   "dependencies": {
     "@floating-ui/react": "^0.25.4",
