@@ -33,4 +33,5 @@ export const DEFAULT_SNIPPET_DEMO_2 = {
   content: "summarize the text in {{number}} words: {{text}}",
 }
 
+// 🟡 should change docs if changed it
 export const VARIABLE_DEFAULT_VALUE_SEPARATOR = ":"
