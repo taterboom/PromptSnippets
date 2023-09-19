@@ -1,6 +1,6 @@
 # PromptSnippets
 
-A chrome extension that speed up the input with variable snippets.
+A chrome extension that speeds up the input with variable snippets.
 Whether you're coding, blogging, or emailing, turn repetitive typing into a single click with PromptSnippets.
 
 ## features
@@ -17,6 +17,6 @@ Type `/` in any input box, and select the snippets, use `Tab` to navigate betwee
 
 ## TODO
 
-- [ ] Input popup box with the variables needed when calling the snippet
-- [ ] Fill variables with the same name
+- [x] Input popup box with the variables needed when calling the snippet
+- [x] Fill variables with the same name
 - [ ] Import & Export
