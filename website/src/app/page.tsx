@@ -23,6 +23,12 @@ export default function Home() {
             </a>
             <a
               className="text-sm text-content-300/90 hover:text-content-100 transition-colors"
+              href="/docs/getting-started"
+            >
+              Guide
+            </a>
+            <a
+              className="text-sm text-content-300/90 hover:text-content-100 transition-colors"
               href="/changelog"
             >
               Changelog

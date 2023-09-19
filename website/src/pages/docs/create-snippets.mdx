@@ -1,0 +1,38 @@
+import Image from "next/image"
+
+# Create snippets
+
+In addition to supporting basic text, PromptSnippets also supports a more powerful type of snippet called Variable Snippets. You can extract the changing parts of a snippet into a variable, and then you only need to fill in this variable.
+
+## Variable Snippets
+
+Use `{{xxx}}` to define a variable, where `xxx` is the name of the variable. For example, `{{count}}` defines a variable snippet named `count`.
+
+You can fill the variables when use this snippet.
+
+Variables also support default value using the `{{name:default}}`. For example, `{{count:1}}` defines a variable snippet named `count`, and the default value is `1`.
+
+💡 Tips: The wrapper symbol of a variable, which are set by default as `{{ }}`, can be customized in the settings.
+
+## Input Mode
+
+There are two ways to fill in variables: `Tab` / `Popup`. You can choose the input mode in the settings.
+
+### Tab
+
+When you use a snippet, you can press `Tab` to fill in the variable. Double `Tab` will select the next variable and fill in the default value.
+
+<Image src="/docs/input-tab.png" width={437} height={227}></Image>
+
+### Popup
+
+When you use a snippet, an input popup box will appear, containing all the variables initialized with their default value. You can fill in the variable in the popup box.
+
+<Image src="/docs/input-popup.png" width={437} height={238}></Image>
+
+---
+
+Here are some references on how to write prompts:
+
+- [https://prompto.chat/](https://prompto.chat/)
+- [https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/)
