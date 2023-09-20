@@ -112,7 +112,6 @@ async function init() {
     }
   })
 
-  let showNew = false
   chrome.runtime.onInstalled.addListener(async (reason) => {
     if (reason.reason === chrome.runtime.OnInstalledReason.UPDATE) {
       if (!reason.previousVersion) return
@@ -121,14 +120,13 @@ async function init() {
         const [major2, minor2] = reason.previousVersion.split(".")
         if (major === major2 && minor === minor2) return
         // big version change should show NEW
-        showNew = true
         chrome.action.setBadgeBackgroundColor({ color: "#ff4d4f" })
         chrome.action.setBadgeText({ text: " " })
         const tabs = await chrome.tabs.query({ active: true })
         if (tabs[0]?.id) {
           chrome.tabs.sendMessage(tabs[0].id, {
             type: "prompt-snippets/init-show-new",
-            payload: showNew,
+            payload: true,
           })
         }
       } catch (err) {
@@ -165,10 +163,15 @@ async function init() {
       syncDisabledUrls()
     }
     if (message.type === "prompt-snippets/get-show-new") {
-      sendResponse(showNew)
+      if (!sender.tab?.id) return
+      chrome.action.getBadgeText({ tabId: sender.tab.id }).then((badgeText) => {
+        const showNew = badgeText === " "
+        console.log("showNew", showNew)
+        sendResponse(showNew)
+      })
+      return true
     }
     if (message.type === "prompt-snippets/close-new") {
-      showNew = false
       chrome.action.setBadgeText({ text: "" })
     }
   })
