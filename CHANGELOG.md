@@ -1,5 +1,11 @@
 # promptsnippets
 
+## 0.1.1
+
+### Patch Changes
+
+- [#7](https://github.com/taterboom/PromptSnippets/pull/7) [`b052df8`](https://github.com/taterboom/PromptSnippets/commit/b052df898374a4199d1a4eb52d6f8b02f5bd96ab) Thanks [@taterboom](https://github.com/taterboom)! - fix NEW not show
+
 ## 0.1.0
 
 ### Minor Changes
