@@ -19,7 +19,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
   const addSnippet = useSnippets((state) => state.addSnippet)
   const updateSnippet = useSnippets((state) => state.updateSnippet)
   const [content, setContent] = useState(currentSnippet?.content || "")
-  const [name, setName] = useState(currentSnippet?.name || "")
+  const [prefix, setPrefix] = useState(currentSnippet?.prefix || "")
   const wrapper = useMemo(() => wrapperSymbol[0]?.split?.(/\s+/) ?? ["", ""], [wrapperSymbol])
 
   return (
@@ -41,9 +41,9 @@ export default function SnippetEditor(props: SnippetEditorProps) {
           placeholder="e.g. Summarize"
           type="text"
           className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
-          value={name}
+          value={prefix}
           onChange={(e) => {
-            setName(e.target.value)
+            setPrefix(e.target.value)
           }}
         />
       </div>
@@ -77,11 +77,11 @@ export default function SnippetEditor(props: SnippetEditorProps) {
           tabIndex={3}
           className="btn btn-primary"
           onClick={() => {
-            if (!(name && content)) {
+            if (!(prefix && content)) {
               alert('Please fill in "Prefix" and "Content"')
               return
             }
-            const snippet = { name: name, content: content }
+            const snippet = { name: prefix, content: content }
             if (currentSnippet) {
               updateSnippet({ ...currentSnippet, ...snippet })
             } else {

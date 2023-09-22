@@ -7,6 +7,7 @@ specifiers:
   '@floating-ui/react': ^0.25.4
   '@types/chrome': ^0.0.243
   '@types/lodash': ^4.14.197
+  '@types/papaparse': ^5.3.8
   '@types/react': ^18.2.15
   '@types/react-dom': ^18.2.7
   '@types/uuid': ^9.0.2
@@ -22,6 +23,7 @@ specifiers:
   fuse.js: ^6.6.2
   happy-dom: ^12.0.1
   lodash: ^4.17.21
+  papaparse: ^5.4.1
   postcss: ^8.4.28
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -38,6 +40,7 @@ dependencies:
   framer-motion: 10.16.1_biqbaboplfbrettd7655fr4n2y
   fuse.js: 6.6.2
   lodash: 4.17.21
+  papaparse: 5.4.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   uuid: 9.0.0
@@ -49,6 +52,7 @@ devDependencies:
   '@crxjs/vite-plugin': 2.0.0-beta.18
   '@types/chrome': 0.0.243
   '@types/lodash': 4.14.197
+  '@types/papaparse': 5.3.8
   '@types/react': 18.2.20
   '@types/react-dom': 18.2.7
   '@types/uuid': 9.0.2
@@ -993,6 +997,12 @@ packages:
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
+    dev: true
+
+  /@types/papaparse/5.3.8:
+    resolution: {integrity: sha512-ArKIEOOWULbhi53wkAiRy1ze4wvrTfhpAj7Yfzva+EkmX2sV8PpFB+xqzJfzXNzK4me95FJH9QZt5NXFVGzOoQ==}
+    dependencies:
+      '@types/node': 20.5.7
     dev: true
 
   /@types/prop-types/15.7.5:
@@ -3101,6 +3111,10 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /papaparse/5.4.1:
+    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
+    dev: false
 
   /parent-module/1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
