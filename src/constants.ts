@@ -16,20 +16,20 @@ export const COMMON_SETTINGS = {
 
 export const DEFAULT_SNIPPET_GUIDE: Snippet = {
   id: "default-snippet-guide",
-  prefix: "Welcome 👋",
+  name: "Welcome 👋",
   content:
     "Save time with variable snippets, type / in any input box, select with {{arrow}} keys, insert it with {{Enter}}, navigate variables with {{Tab}} and then fill them.",
 }
 
 export const DEFAULT_SNIPPET_DEMO_1: Snippet = {
   id: "default-snippet-demo-1",
-  prefix: "Translate",
+  name: "Translate",
   content: "translate the text to {{lang}}: {{text}}",
 }
 
 export const DEFAULT_SNIPPET_DEMO_2: Snippet = {
   id: "default-snippet-demo-2",
-  prefix: "Summary",
+  name: "Summary",
   content: "summarize the text in {{number}} words: {{text}}",
 }
 

@@ -270,7 +270,7 @@ function SnippetsPicker() {
                     }}
                   >
                     <HighlightText
-                      text={item.prefix}
+                      text={item.name}
                       positions={
                         matches?.filter((match) => match.key === "name")?.[0]?.indices || []
                       }
@@ -294,7 +294,7 @@ function SnippetsPicker() {
                   <div className="px-4 py-2 text-content-300">
                     <div className="text-sm">
                       <HighlightText
-                        text={activeCandidateSnippet.item.prefix}
+                        text={activeCandidateSnippet.item.name}
                         positions={
                           activeCandidateSnippet.matches?.filter(
                             (match) => match.key === "name"

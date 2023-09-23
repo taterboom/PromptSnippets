@@ -6,6 +6,26 @@ import { unparse, parse } from "papaparse"
 import { Snippet } from "../types"
 import { genId } from "../utils/id"
 
+type ExportableSnippet = Pick<Snippet, "id" | "content"> & {
+  prefix: Snippet["name"]
+}
+
+type ExportableAllData = {
+  snippets: ExportableSnippet[]
+}
+
+type ImportableAllData = {
+  snippets: Snippet[]
+}
+
+function formatSnippet(snippet: Snippet): ExportableSnippet {
+  return {
+    id: snippet.id,
+    prefix: snippet.name,
+    content: snippet.content,
+  }
+}
+
 function parseSnippetsLike(snippetsLike: any[]) {
   const snippets: Snippet[] = []
   for (const snippetLike of snippetsLike) {
@@ -16,24 +36,27 @@ function parseSnippetsLike(snippetsLike: any[]) {
     }
     snippets.push({
       id: snippetLike.id || genId(),
-      prefix,
+      name: prefix,
       content,
     })
   }
   return snippets
 }
 
-type ExportableAllData = {
-  snippets: Snippet[]
-}
-
-function parseEverythingImported(unkown: unknown): ExportableAllData | null {
+function parseEverythingImported(unkown: unknown): ImportableAllData | null {
   if (!unkown || typeof unkown !== "object") return null
-  if (!("snippets" in unkown)) return null
-  const maybeValidData = unkown as ExportableAllData
-  return {
-    snippets: parseSnippetsLike(maybeValidData.snippets),
+  if ("snippets" in unkown) {
+    const maybeValidData = unkown as ExportableAllData
+    return {
+      snippets: parseSnippetsLike(maybeValidData.snippets),
+    }
   }
+  if (Array.isArray(unkown)) {
+    return {
+      snippets: parseSnippetsLike(unkown),
+    }
+  }
+  return null
 }
 
 const FILE_MMIE = {
@@ -51,10 +74,10 @@ const getDateString = () => {
 }
 
 function ExportSnippets() {
-  const type = useRef("json")
+  const type = useRef("csv")
   const download = () => {
     const filename = `PromptSnippets-snippets-${getDateString()}.${type.current}`
-    const data = snippetsSelectors.snippets(useSnippets.getState())
+    const data = snippetsSelectors.snippets(useSnippets.getState()).map(formatSnippet)
     let fileStr: string
     if (type.current === "csv") {
       fileStr = unparse(data)
@@ -82,6 +105,7 @@ function ExportSnippets() {
         down
       </button>
       <select defaultValue={type.current} onChange={(e) => (type.current = e.target.value)}>
+        <option value="csv">csv</option>
         <option value="json">json</option>
         <option value="txt">txt</option>
       </select>
@@ -104,7 +128,8 @@ function ImportSnippets() {
             parse(file, {
               header: true,
               complete: (result) => {
-                console.log(result)
+                const data = parseEverythingImported(result.data)
+                console.log(data)
               },
               error: (err) => {
                 alert("Import error")

@@ -53,7 +53,7 @@ export function InputPopup(props: InputPopupProps) {
       <div>
         <div className={clsx("group space-y-1")}>
           <div className="flex items-center gap-2 overflow-hidden font-medium">
-            {props.snippet.prefix}
+            {props.snippet.name}
           </div>
           <Expandable className="text-xs text-content-300 transition-all">
             {props.snippet.content}

@@ -19,7 +19,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
   const addSnippet = useSnippets((state) => state.addSnippet)
   const updateSnippet = useSnippets((state) => state.updateSnippet)
   const [content, setContent] = useState(currentSnippet?.content || "")
-  const [prefix, setPrefix] = useState(currentSnippet?.prefix || "")
+  const [prefix, setPrefix] = useState(currentSnippet?.name || "")
   const wrapper = useMemo(() => wrapperSymbol[0]?.split?.(/\s+/) ?? ["", ""], [wrapperSymbol])
 
   return (
@@ -81,7 +81,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
               alert('Please fill in "Prefix" and "Content"')
               return
             }
-            const snippet = { prefix, content }
+            const snippet = { name: prefix, content }
             if (currentSnippet) {
               updateSnippet({ ...currentSnippet, ...snippet })
             } else {

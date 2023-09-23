@@ -1,6 +1,6 @@
 export type Snippet = {
   id: string
-  prefix: string
+  name: string
   content: string
 }
 
