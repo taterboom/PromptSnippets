@@ -81,7 +81,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
               alert('Please fill in "Prefix" and "Content"')
               return
             }
-            const snippet = { name: prefix, content: content }
+            const snippet = { prefix, content }
             if (currentSnippet) {
               updateSnippet({ ...currentSnippet, ...snippet })
             } else {
