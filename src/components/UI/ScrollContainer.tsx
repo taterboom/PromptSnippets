@@ -44,7 +44,7 @@ export default function ScrollContainer(
     <div className="relative">
       <div
         className={
-          "absolute top-0 left-0 w-full h-12 bg-gradient-to-b transition-opacity z-20 " +
+          "absolute top-0 left-0 w-full h-4 bg-gradient-to-b transition-opacity z-20 pointer-events-none " +
           gradinet[0] +
           " " +
           gradinet[1]
@@ -56,7 +56,7 @@ export default function ScrollContainer(
       </div>
       <div
         className={
-          "absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t transition-opacity z-20 " +
+          "absolute bottom-0 left-0 w-full h-4 bg-gradient-to-t transition-opacity z-20 pointer-events-none " +
           gradinet[0] +
           " " +
           gradinet[1]

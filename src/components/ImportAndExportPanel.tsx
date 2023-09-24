@@ -125,7 +125,6 @@ function ExportSnippets() {
 function ImportSnippets(props: { onImport: (data: ImportableAllData) => void }) {
   const handleImport = (unkown: unknown) => {
     const data = parseEverythingImported(unkown)
-    console.log(unkown, data)
     if (!data) {
       alert("No valid data found")
       return
@@ -165,7 +164,6 @@ function ImportSnippets(props: { onImport: (data: ImportableAllData) => void }) 
                 const result = e.target?.result as string | undefined
                 if (!result) return
                 try {
-                  console.log(result)
                   handleImport(JSON.parse(result))
                 } catch (err) {
                   alert("Import error")
@@ -231,7 +229,6 @@ function ImportCandidate(props: {
                     type="checkbox"
                     checked={selectIds.includes(snippet.id)}
                     onChange={(e) => {
-                      console.log(e.target.checked)
                       if (e.target.checked) {
                         setSelectIds([...selectIds, snippet.id])
                       } else {
