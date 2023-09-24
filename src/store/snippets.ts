@@ -13,6 +13,7 @@ type SnippetsState = {
   addSnippet: (snippet: Omit<Snippet, "id">) => void
   updateSnippet: (snippet: Snippet) => void
   removeSnippets: (ids: string[]) => void
+  importSnippets: (snippets: Snippet[]) => void
 }
 
 export const useSnippets = create<SnippetsState>()(
@@ -49,6 +50,20 @@ export const useSnippets = create<SnippetsState>()(
       set({ ids, snippetsStore: pick(get().snippetsStore, [...ids]) })
       toastErrWhenFailed([
         chrome.storage.sync.remove(toBeRemovedIds),
+        chrome.storage.sync.set({ ids }),
+      ])
+    },
+    importSnippets: (snippets) => {
+      const ids = [...snippets.map((snippet) => snippet.id), ...get().ids]
+      const snippetsStore = {
+        ...get().snippetsStore,
+        ...snippets.reduce((acc, snippet) => ({ ...acc, [snippet.id]: snippet }), {}),
+      }
+      set({ ids, snippetsStore })
+      toastErrWhenFailed([
+        chrome.storage.sync.set(
+          snippets.reduce((acc, snippet) => ({ ...acc, [snippet.id]: snippet }), {})
+        ),
         chrome.storage.sync.set({ ids }),
       ])
     },

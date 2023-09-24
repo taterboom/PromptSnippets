@@ -1,10 +1,14 @@
-import { useRef } from "react"
+import { useMemo, useRef, useState } from "react"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
 import { PopupContainer } from "./UI/Popup"
 import { MiClose } from "./UI/icons"
 import { unparse, parse } from "papaparse"
 import { Snippet } from "../types"
 import { genId } from "../utils/id"
+import { motion, AnimatePresence } from "framer-motion"
+import clsx from "classnames"
+import Expandable from "./UI/Expandable"
+import ScrollContainer from "./UI/ScrollContainer"
 
 type ExportableSnippet = Pick<Snippet, "id" | "content"> & {
   prefix: Snippet["name"]
@@ -29,8 +33,10 @@ function formatSnippet(snippet: Snippet): ExportableSnippet {
 function parseSnippetsLike(snippetsLike: any[]) {
   const snippets: Snippet[] = []
   for (const snippetLike of snippetsLike) {
+    // adapt for AI Prompt Genius
     const prefix = snippetLike.prefix || snippetLike.name || snippetLike.title
-    const content = snippetLike.content
+    // adapt for AI Prompt Genius
+    const content = snippetLike.content || snippetLike.text
     if (!(prefix && content)) {
       continue
     }
@@ -46,9 +52,14 @@ function parseSnippetsLike(snippetsLike: any[]) {
 function parseEverythingImported(unkown: unknown): ImportableAllData | null {
   if (!unkown || typeof unkown !== "object") return null
   if ("snippets" in unkown) {
-    const maybeValidData = unkown as ExportableAllData
     return {
-      snippets: parseSnippetsLike(maybeValidData.snippets),
+      snippets: parseSnippetsLike(unkown.snippets as any[]),
+    }
+  }
+  // adapt for AI Prompt Genius
+  if ("prompts" in unkown) {
+    return {
+      snippets: parseSnippetsLike(unkown.prompts as any[]),
     }
   }
   if (Array.isArray(unkown)) {
@@ -74,19 +85,18 @@ const getDateString = () => {
 }
 
 function ExportSnippets() {
-  const type = useRef("csv")
-  const download = () => {
-    const filename = `PromptSnippets-snippets-${getDateString()}.${type.current}`
+  const download = (type: keyof typeof FILE_MMIE) => {
+    const filename = `PromptSnippets-snippets-${getDateString()}.${type}`
     const data = snippetsSelectors.snippets(useSnippets.getState()).map(formatSnippet)
     let fileStr: string
-    if (type.current === "csv") {
+    if (type === "csv") {
       fileStr = unparse(data)
     } else {
       const exportableAllData: ExportableAllData = { snippets: data }
       fileStr = JSON.stringify(exportableAllData)
     }
     const file = new File([fileStr], filename, {
-      type: FILE_MMIE[type.current as keyof typeof FILE_MMIE],
+      type: FILE_MMIE[type],
     })
     const url = URL.createObjectURL(file)
     const a = document.createElement("a")
@@ -96,87 +106,209 @@ function ExportSnippets() {
     URL.revokeObjectURL(url)
   }
   return (
-    <div>
-      <button
-        onClick={() => {
-          download()
-        }}
-      >
-        down
-      </button>
-      <select defaultValue={type.current} onChange={(e) => (type.current = e.target.value)}>
-        <option value="csv">csv</option>
-        <option value="json">json</option>
-        <option value="txt">txt</option>
-      </select>
+    <div className="flex flex-col gap-2">
+      {Object.keys(FILE_MMIE).map((type) => (
+        <button
+          key={type}
+          className="btn btn-sm btn-primary"
+          onClick={() => {
+            download(type as keyof typeof FILE_MMIE)
+          }}
+        >
+          Export {type.toUpperCase()}
+        </button>
+      ))}
     </div>
   )
 }
 
-function ImportSnippets() {
+function ImportSnippets(props: { onImport: (data: ImportableAllData) => void }) {
+  const handleImport = (unkown: unknown) => {
+    const data = parseEverythingImported(unkown)
+    console.log(unkown, data)
+    if (!data) {
+      alert("No valid data found")
+      return
+    }
+    if (data.snippets.length === 0) {
+      alert("No valid snippets found")
+      return
+    }
+    props.onImport(data)
+  }
   return (
-    <div>
-      <input
-        type="file"
-        accept={Object.keys(FILE_MMIE)
-          .map((t) => "." + t)
-          .join()}
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (!file) return
-          if (file.type === FILE_MMIE.csv) {
-            parse(file, {
-              header: true,
-              complete: (result) => {
-                const data = parseEverythingImported(result.data)
-                console.log(data)
-              },
-              error: (err) => {
-                alert("Import error")
-              },
-            })
-          } else {
-            const fileReader = new FileReader()
-            fileReader.onload = (e) => {
-              const result = e.target?.result as string | undefined
-              if (!result) return
-              try {
-                const data = parseEverythingImported(JSON.parse(result))
-                console.log(data)
-              } catch (err) {
-                alert("Import error")
+    <div className="flex flex-col gap-2">
+      <label className="btn btn-sm btn-primary cursor-pointer">
+        Import Any
+        <input
+          className="hidden"
+          type="file"
+          accept={Object.keys(FILE_MMIE)
+            .map((t) => "." + t)
+            .join()}
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (!file) return
+            if (file.type === FILE_MMIE.csv) {
+              parse(file, {
+                header: true,
+                complete: (result) => {
+                  handleImport(result.data)
+                },
+                error: (err) => {
+                  alert("Import error")
+                },
+              })
+            } else {
+              const fileReader = new FileReader()
+              fileReader.onload = (e) => {
+                const result = e.target?.result as string | undefined
+                if (!result) return
+                try {
+                  console.log(result)
+                  handleImport(JSON.parse(result))
+                } catch (err) {
+                  alert("Import error")
+                }
               }
+              fileReader.readAsText(file)
             }
-            fileReader.readAsText(file)
-          }
-        }}
-      />
+          }}
+        />
+      </label>
     </div>
   )
 }
 
-export default function ImportAndExportPanel(props: { onClose: () => void }) {
+const checkIsDuplicated = (snippet1: Snippet, snippet2: Snippet) => {
+  return (
+    snippet1.id === snippet2.id ||
+    (snippet1.content === snippet2.content && snippet1.name === snippet2.name)
+  )
+}
+
+function ImportCandidate(props: {
+  data: ImportableAllData
+  onClose: () => void
+  onConfirm?: () => void
+}) {
+  const snippetsInStore = useSnippets(snippetsSelectors.snippets)
+  const importSnippets = useSnippets((state) => state.importSnippets)
+  const [selectIds, setSelectIds] = useState<string[]>(
+    props.data.snippets
+      .filter((s) => !snippetsInStore.some((s2) => checkIsDuplicated(s, s2)))
+      .map((s) => s.id)
+  )
+  const hasDuplicate = useMemo(() => {
+    return props.data.snippets.some((s) => snippetsInStore.some((s2) => checkIsDuplicated(s, s2)))
+  }, [props.data.snippets, snippetsInStore])
+
   return (
     <PopupContainer wrapperClassName="!px-2" onClick={props.onClose}>
       <div className="flex justify-between items-center px-2">
-        <div className="text-base font-semibold">Import & Export</div>
+        <div className="text-base font-semibold">Import</div>
         <button className="btn btn-icon" onClick={props.onClose}>
           <MiClose />
         </button>
       </div>
-      <div className="divide-y divide-neutral-100">
+      <h3 className="text-sm text-content-300 px-2">Select the snippets.</h3>
+      <ScrollContainer className="divide-y divide-base-400 max-h-[300px]">
+        {props.data.snippets.map((snippet, index) => {
+          const isDuplicated = snippetsInStore.some((s) => checkIsDuplicated(s, snippet))
+          return (
+            <div
+              key={index}
+              className={clsx(
+                "group flex gap-2 items-center py-1.5 px-2 hover:bg-base-300 space-y-1",
+                isDuplicated && "opacity-50"
+              )}
+            >
+              <div className={clsx("flex-shrink-0", hasDuplicate && "min-w-[64px]")}>
+                {isDuplicated ? (
+                  <span className="text-danger-200 text-sm">Duplicated</span>
+                ) : (
+                  <input
+                    type="checkbox"
+                    checked={selectIds.includes(snippet.id)}
+                    onChange={(e) => {
+                      console.log(e.target.checked)
+                      if (e.target.checked) {
+                        setSelectIds([...selectIds, snippet.id])
+                      } else {
+                        setSelectIds(selectIds.filter((id) => id !== snippet.id))
+                      }
+                    }}
+                  />
+                )}
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <div className="flex items-center gap-1 overflow-hidden">
+                  <div className="text-sm flex-1 truncate text-left">{snippet.name}</div>
+                </div>
+                <Expandable className="text-xs text-content-300 transition-all">
+                  {snippet.content}
+                </Expandable>
+              </div>
+            </div>
+          )
+        })}
+      </ScrollContainer>
+      <div className="flex justify-end gap-2 items-center">
+        <button className="btn" onClick={props.onClose}>
+          Cancel
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            importSnippets(props.data.snippets.filter((s) => selectIds.includes(s.id)))
+            props.onConfirm?.()
+          }}
+        >
+          Save
+        </button>
+      </div>
+    </PopupContainer>
+  )
+}
+
+export default function ImportAndExportPanel(props: { onClose: () => void }) {
+  const [importCandidateVisible, setImportCandidateVisible] = useState(false)
+  const importableAllDataRef = useRef<ImportableAllData | null>(null)
+  return (
+    <PopupContainer wrapperClassName="!px-2" onClick={props.onClose}>
+      <div className="flex justify-between items-center px-2 min-w-[200px]">
+        <div className="text-base font-semibold">Import/Export</div>
+        <button className="btn btn-icon" onClick={props.onClose}>
+          <MiClose />
+        </button>
+      </div>
+      <div className="px-2 space-y-2">
         <div>
-          <div>Export</div>
-          <div>
-            <div>Prompt snippets</div>
-            <ExportSnippets />
-          </div>
+          <div className="font-medium mb-2">Export</div>
+          <ExportSnippets />
         </div>
         <div>
-          <div>Import</div>
-          <ImportSnippets />
+          <div className="font-medium mb-2">Import</div>
+          <ImportSnippets
+            onImport={(data) => {
+              importableAllDataRef.current = data
+              setImportCandidateVisible(true)
+            }}
+          />
         </div>
       </div>
+      <AnimatePresence>
+        {importCandidateVisible && (
+          <ImportCandidate
+            data={importableAllDataRef.current!}
+            onClose={() => setImportCandidateVisible(false)}
+            onConfirm={() => {
+              setImportCandidateVisible(false)
+              props.onClose?.()
+            }}
+          ></ImportCandidate>
+        )}
+      </AnimatePresence>
     </PopupContainer>
   )
 }
