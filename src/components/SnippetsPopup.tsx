@@ -7,13 +7,21 @@ import { awesomeSetSelectionRange, selectNextRange, setInputValue } from "../uti
 import KBD from "./UI/KBD"
 import Fuse from "fuse.js"
 import { Snippet } from "../types"
-import { MiArrowDown, MiArrowUp, MiEnter, TablerMoodEmptyFilled } from "./UI/icons"
+import {
+  MiArrowDown,
+  MiArrowUp,
+  MiClose,
+  MiEnter,
+  TablerMoodEmptyFilled,
+  TablerPower,
+} from "./UI/icons"
 import HighlightText from "./UI/HighlightText"
 import { ROOT_ID } from "../constants"
 import { throttle } from "lodash"
 import { InputPopup } from "./InputPopup"
 import { useIsUnmount } from "../hooks/useIsUnmount"
 import { getVariables } from "../utils/snippet"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./UI/Tooltip"
 
 function NoSnippets() {
   return (
@@ -84,25 +92,36 @@ function Container(
   )
 }
 
-function Footer() {
+function Footer(props: { hover: boolean; onClose: () => void }) {
   return (
-    <div className="flex justify-between items-center border-t border-neutral-100 py-1.5 px-3 text-xs opacity-70">
-      <div className="space-x-2">
-        <span className="inline-flex items-center gap-1">
-          <KBD>
-            <MiArrowUp />
-          </KBD>
-          <KBD className="-ml-0.5">
-            <MiArrowDown />
-          </KBD>
-          navigate
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <KBD>
-            <MiEnter />
-          </KBD>
-          select
-        </span>
+    <div className="relative flex justify-between items-center border-t border-neutral-100 py-1.5 px-3 text-xs opacity-70">
+      <div className="">
+        <AnimatePresence>
+          {props.hover && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.1 }}
+              className="absolute top-0 left-0 h-full pl-2"
+            >
+              <ControlBar onClose={props.onClose} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {!props.hover && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.1 }}
+              className="absolute top-0 left-0 h-full pl-2"
+            >
+              <SimpleGuide />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <button
         onClick={() => {
@@ -125,7 +144,7 @@ const formatSearchText = (triggerSymbol: string[], text: string) => {
   return text
 }
 
-function SnippetsPicker() {
+function SnippetsPicker(props: { onClose: () => void }) {
   const isUnmountRef = useIsUnmount()
   const snippets = useSnippets(snippetsSelectors.snippets)
   const target = usePageState((state) => state.currentInput)
@@ -140,6 +159,7 @@ function SnippetsPicker() {
   )
   const [currentSelectedSnippet, setCurrentSelectedSnippet] = useState<Snippet | null>(null)
   const [popupActive, setPopupActive] = useState(true)
+  const [hover, setHover] = useState(false)
   const fuseInstance = useMemo(() => {
     return new Fuse<Snippet>(snippets, {
       includeMatches: true,
@@ -252,6 +272,12 @@ function SnippetsPicker() {
           className="relative"
           variants={{ active: { opacity: 1 }, inactive: { opacity: 0 } }}
           animate={popupActive ? "active" : "inactive"}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
         >
           <Container className="flex flex-col">
             <>
@@ -278,7 +304,7 @@ function SnippetsPicker() {
                   </div>
                 ))}
               </div>
-              <Footer />
+              <Footer hover={hover} onClose={props.onClose} />
             </>
           </Container>
           <AnimatePresence>
@@ -290,7 +316,7 @@ function SnippetsPicker() {
                 transition={{ duration: 0.1 }}
                 className="absolute -right-1.5 top-0 translate-x-full"
               >
-                <Container>
+                <Container className="overflow-y-auto">
                   <div className="px-4 py-2 text-content-300">
                     <div className="text-sm">
                       <HighlightText
@@ -348,11 +374,80 @@ function SnippetsPicker() {
   )
 }
 
+function ControlBar(props: { onClose: () => void }) {
+  const updateDisabled = usePageState((state) => state.updateDisabled)
+  return (
+    <div className="flex items-center gap-2 h-full">
+      <button
+        className="btn btn-icon btn-sm"
+        onClick={() => {
+          props.onClose()
+        }}
+      >
+        <MiClose />
+      </button>
+      <Tooltip>
+        <TooltipTrigger>
+          <button
+            className="btn btn-icon btn-sm"
+            onClick={() => {
+              updateDisabled(true)
+              props.onClose()
+            }}
+          >
+            <TablerPower />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent className="w-40 text-xs text-content-200 z-[1000000] bg-base-100/70 backdrop-blur border border-neutral-200 p-2 rounded menu-popup-shadow">
+          Close the popup in this page. You can then open it in the settings by click the extension
+          icon.
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  )
+}
+
+function SimpleGuide() {
+  return (
+    <div className="flex items-center gap-2 h-full">
+      <span className="inline-flex items-center gap-1">
+        <KBD>
+          <MiArrowUp />
+        </KBD>
+        <KBD className="-ml-0.5">
+          <MiArrowDown />
+        </KBD>
+        navigate
+      </span>
+      <span className="inline-flex items-center gap-1">
+        <KBD>
+          <MiEnter />
+        </KBD>
+        select
+      </span>
+    </div>
+  )
+}
+
 function SnippetsPopupInner() {
   const snippets = useSnippets(snippetsSelectors.snippets)
   const rootRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const target = usePageState((state) => state.currentInput)
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const closePanel = (e: KeyboardEvent) => {
+      console.log(e.key)
+      if (e.key === "Escape" && document.activeElement === target) {
+        setVisible(false)
+      }
+    }
+    document.addEventListener("keydown", closePanel)
+    return () => {
+      document.removeEventListener("keydown", closePanel)
+    }
+  }, [target])
 
   useEffect(() => {
     const rootEl = rootRef.current
@@ -387,16 +482,22 @@ function SnippetsPopupInner() {
 
   return (
     <div ref={rootRef} className="fixed z-[100000]">
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 8 }}
-        transition={{ duration: 0.1 }}
-        className="absolute left-0 z-[100000]"
-        ref={contentRef}
-      >
-        {snippets.length > 0 ? <SnippetsPicker></SnippetsPicker> : <NoSnippets></NoSnippets>}
-      </motion.div>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.1 }}
+          className="absolute left-0 z-[100000] group"
+          ref={contentRef}
+        >
+          {snippets.length > 0 ? (
+            <SnippetsPicker onClose={() => setVisible(false)}></SnippetsPicker>
+          ) : (
+            <NoSnippets></NoSnippets>
+          )}
+        </motion.div>
+      )}
     </div>
   )
 }
