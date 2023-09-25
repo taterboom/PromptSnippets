@@ -19,4 +19,4 @@ Type `/` in any input box, and select the snippets, use `Tab` to navigate betwee
 
 - [x] Input popup box with the variables needed when calling the snippet
 - [x] Fill variables with the same name
-- [ ] Import & Export
+- [x] Import & Export

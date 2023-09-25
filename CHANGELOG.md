@@ -1,5 +1,11 @@
 # promptsnippets
 
+## 0.2.0
+
+### Minor Changes
+
+- [#9](https://github.com/taterboom/PromptSnippets/pull/9) [`6a85d16`](https://github.com/taterboom/PromptSnippets/commit/6a85d160ac1d17cb48625f52bcf5d8c8cce609ef) Thanks [@taterboom](https://github.com/taterboom)! - support export and import
+
 ## 0.1.1
 
 ### Patch Changes

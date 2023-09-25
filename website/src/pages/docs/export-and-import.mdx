@@ -1,0 +1,39 @@
+import { CarbonImportExport } from "@/components/icons"
+import { Image } from "@/components/DocComponents"
+
+# Export and Import
+
+Click <CarbonImportExport style={{display: "inline"}} /> to open the export/import panel.
+
+## Export
+
+You can export snippets as `json`/`txt`/`csv` files.
+
+The exported content looks like this:
+
+`json` / `txt`
+
+```json
+{
+  "snippets": [
+    {
+      "id": "string",
+      "prefix": "string",
+      "content": "string"
+    }
+  ]
+}
+```
+
+`csv`
+
+```csv
+id,prefix,content
+xx,xxxxxx,xxxxxxx
+```
+
+## Import
+
+You can import any `json`/`txt`/`csv` files in one button, and select what you want to import.
+
+<Image s="guide-5" width={360} height={450} />

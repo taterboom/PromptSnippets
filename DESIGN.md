@@ -12,6 +12,9 @@ App
   - HelpPanel
   - Snippets management
     - CRUD
+  - ImportAndExportPanel
+    - Export
+    - Import
 - SnippetsPopup
   - Trigger
   - Select
