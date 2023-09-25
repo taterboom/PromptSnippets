@@ -269,8 +269,10 @@ function ImportCandidate(props: {
 }
 
 export default function ImportAndExportPanel(props: { onClose: () => void }) {
+  const [importKey, setImportKey] = useState(0)
   const [importCandidateVisible, setImportCandidateVisible] = useState(false)
   const importableAllDataRef = useRef<ImportableAllData | null>(null)
+  const resetImport = () => setImportKey((v) => v + 1)
   return (
     <PopupContainer wrapperClassName="!px-2" onClick={props.onClose}>
       <div className="flex justify-between items-center px-2 min-w-[200px]">
@@ -287,6 +289,7 @@ export default function ImportAndExportPanel(props: { onClose: () => void }) {
         <div>
           <div className="font-medium mb-2">Import</div>
           <ImportSnippets
+            key={importKey}
             onImport={(data) => {
               importableAllDataRef.current = data
               setImportCandidateVisible(true)
@@ -298,7 +301,10 @@ export default function ImportAndExportPanel(props: { onClose: () => void }) {
         {importCandidateVisible && (
           <ImportCandidate
             data={importableAllDataRef.current!}
-            onClose={() => setImportCandidateVisible(false)}
+            onClose={() => {
+              setImportCandidateVisible(false)
+              resetImport()
+            }}
             onConfirm={() => {
               setImportCandidateVisible(false)
               props.onClose?.()
