@@ -203,7 +203,7 @@ function ImportCandidate(props: {
 
   return (
     <PopupContainer wrapperClassName="!px-2" onClick={props.onClose}>
-      <div className="flex justify-between items-center px-2">
+      <div className="flex justify-between items-center px-2 min-w-[200px]">
         <div className="text-base font-semibold">Import</div>
         <button className="btn btn-icon" onClick={props.onClose}>
           <MiClose />
