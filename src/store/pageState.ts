@@ -8,6 +8,7 @@ type PageState = typeof COMMON_SETTINGS & {
   menuPanelVisible: boolean
   settingsPanelVisible: boolean
   helpPanelVisible: boolean
+  importAndExportPanelVisible: boolean
   searchText: string
 
   updateDisabled: (disabled: boolean) => void
@@ -21,6 +22,7 @@ export const usePageState = create<PageState>()((set) => ({
   menuPanelVisible: false,
   settingsPanelVisible: false,
   helpPanelVisible: false,
+  importAndExportPanelVisible: false,
   searchText: "",
   ...COMMON_SETTINGS,
 

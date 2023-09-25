@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import SnippetEditor from "./SnippetEditor"
 import Snippets from "./Snippets"
 import { usePageState } from "../store/pageState"
-import { MiCircleHelp, MiAdd, MiClose, MiSearch, MiSettings } from "./UI/icons"
+import { MiCircleHelp, MiAdd, MiClose, MiSearch, MiSettings, CarbonImportExport } from "./UI/icons"
 import SettingsPanel from "./SettingsPanel"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
 import HelpPanel from "./HelpPanel"
 import { useNew } from "../hooks/useNew"
+import ImportAndExportPanel from "./ImportAndExportPanel"
 
 function Header(props: { onCreate?: () => void }) {
   const searchText = usePageState((state) => state.searchText)
@@ -39,6 +40,14 @@ function Header(props: { onCreate?: () => void }) {
             }}
           >
             <MiCircleHelp />
+          </button>
+          <button
+            className="btn btn-icon btn-ghost"
+            onClick={() => {
+              usePageState.setState({ importAndExportPanelVisible: true })
+            }}
+          >
+            <CarbonImportExport />
           </button>
           <button
             className="btn btn-icon btn-ghost"
@@ -91,6 +100,7 @@ export default function MenuPanel() {
   const menuPanelVisible = usePageState((state) => state.menuPanelVisible)
   const settingsPanelVisible = usePageState((state) => state.settingsPanelVisible)
   const helpPanelVisible = usePageState((state) => state.helpPanelVisible)
+  const importAndExportPanelVisible = usePageState((state) => state.importAndExportPanelVisible)
   const [snippetEditorVisible, setSnippetEditorVisible] = useState(false)
   return (
     <AnimatePresence>
@@ -132,6 +142,15 @@ export default function MenuPanel() {
                   usePageState.setState({ helpPanelVisible: false })
                 }}
               ></HelpPanel>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {importAndExportPanelVisible && (
+              <ImportAndExportPanel
+                onClose={() => {
+                  usePageState.setState({ importAndExportPanelVisible: false })
+                }}
+              ></ImportAndExportPanel>
             )}
           </AnimatePresence>
         </motion.div>
