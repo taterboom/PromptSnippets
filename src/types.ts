@@ -2,6 +2,7 @@ export type Snippet = {
   id: string
   name: string
   content: string
+  tags?: string[]
 }
 
 export type InputMode = "Tab" | "Popup"

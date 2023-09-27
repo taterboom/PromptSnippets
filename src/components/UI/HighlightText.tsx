@@ -1,10 +1,13 @@
 import { useMemo } from "react"
 import Fuse from "fuse.js"
+import clsx from "classnames"
 
-export default function HighlightText(props: {
-  text: string
-  positions: Fuse.FuseResultMatch["indices"]
-}) {
+export default function HighlightText(
+  props: {
+    text: string
+    positions: Fuse.FuseResultMatch["indices"]
+  } & React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>
+) {
   const { text, positions } = props
   const chunks = useMemo(() => {
     const result: { highlight: boolean; data: string }[] = []
@@ -22,7 +25,11 @@ export default function HighlightText(props: {
   return (
     <>
       {chunks.map((chunk, index) => (
-        <span key={index} className={chunk.highlight ? "text-primary-200" : ""}>
+        <span
+          key={index}
+          {...props}
+          className={clsx(props.className, chunk.highlight ? "text-primary-200" : "")}
+        >
           {chunk.data}
         </span>
       ))}
