@@ -441,7 +441,6 @@ function SnippetsPopupInner() {
 
   useEffect(() => {
     const closePanel = (e: KeyboardEvent) => {
-      console.log(e.key)
       if (e.key === "Escape" && document.activeElement === target) {
         setVisible(false)
       }
