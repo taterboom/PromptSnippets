@@ -290,7 +290,7 @@ function SnippetsPicker() {
                 transition={{ duration: 0.1 }}
                 className="absolute -right-1.5 top-0 translate-x-full"
               >
-                <Container>
+                <Container className="!overflow-y-auto">
                   <div className="px-4 py-2 text-content-300">
                     <div className="text-sm">
                       <HighlightText
