@@ -43,10 +43,16 @@ function parseSnippetsLike(snippetsLike: any[]) {
     if (!(prefix && content)) {
       continue
     }
-    const tags = snippetLike.tags
-      ?.split(",")
-      .map((t: string) => t.trim())
-      .filter(Boolean)
+    const tags = Array.isArray(snippetLike.tags)
+      ? snippetLike.tags
+      : [
+          ...new Set(
+            snippetLike.tags
+              ?.split(",")
+              .map((t: string) => t.trim())
+              .filter(Boolean)
+          ),
+        ]
     snippets.push({
       id: snippetLike.id || genId(),
       name: prefix,

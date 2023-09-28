@@ -146,7 +146,7 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.15, delay: 0.45 }}
+              transition={{ duration: 0.15, delay: 0.3 }}
               ref={ref}
               style={{
                 ...context.floatingStyles,
