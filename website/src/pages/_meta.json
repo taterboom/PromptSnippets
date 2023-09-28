@@ -6,5 +6,11 @@
   "changelog": {
     "title": "Changelog",
     "type": "page"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "type": "page",
+    "href": "https://github.com/taterboom/PromptSnippets/issues/new",
+    "newWindow": true
   }
 }

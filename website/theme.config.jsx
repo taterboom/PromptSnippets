@@ -1,6 +1,7 @@
 import Image from "next/image"
 
 export default {
+  docsRepositoryBase: "https://github.com/taterboom/PromptSnippets/tree/main/website",
   logo: (
     <div
       className="flex items-center gap-2 text-lg font-medium"
