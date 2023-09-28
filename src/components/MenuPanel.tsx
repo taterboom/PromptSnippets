@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { useNew } from "../hooks/useNew"
 import { usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
-import HelpPanel from "./HelpPanel"
 import ImportAndExportPanel from "./ImportAndExportPanel"
 import SettingsPanel from "./SettingsPanel"
 import SnippetEditor from "./SnippetEditor"
@@ -128,7 +127,7 @@ function Header(props: { onCreate?: () => void }) {
           <button
             className="btn btn-icon btn-ghost"
             onClick={() => {
-              usePageState.setState({ helpPanelVisible: true })
+              window.open("https://www.promptsnippets.top/docs/getting-started?from=extension")
             }}
           >
             <MiCircleHelp />
@@ -173,7 +172,6 @@ function Header(props: { onCreate?: () => void }) {
 export default function MenuPanel() {
   const menuPanelVisible = usePageState((state) => state.menuPanelVisible)
   const settingsPanelVisible = usePageState((state) => state.settingsPanelVisible)
-  const helpPanelVisible = usePageState((state) => state.helpPanelVisible)
   const importAndExportPanelVisible = usePageState((state) => state.importAndExportPanelVisible)
   const [snippetEditorVisible, setSnippetEditorVisible] = useState(false)
   return (
@@ -207,15 +205,6 @@ export default function MenuPanel() {
                   usePageState.setState({ settingsPanelVisible: false })
                 }}
               ></SettingsPanel>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {helpPanelVisible && (
-              <HelpPanel
-                onClose={() => {
-                  usePageState.setState({ helpPanelVisible: false })
-                }}
-              ></HelpPanel>
             )}
           </AnimatePresence>
           <AnimatePresence>

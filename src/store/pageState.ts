@@ -7,7 +7,6 @@ type PageState = typeof COMMON_SETTINGS & {
   snippetsPopupVisible: boolean
   menuPanelVisible: boolean
   settingsPanelVisible: boolean
-  helpPanelVisible: boolean
   importAndExportPanelVisible: boolean
   searchText: string
   selectedTags: string[]
@@ -23,7 +22,6 @@ export const usePageState = create<PageState>()((set) => ({
   snippetsPopupVisible: false,
   menuPanelVisible: false,
   settingsPanelVisible: false,
-  helpPanelVisible: false,
   importAndExportPanelVisible: false,
   searchText: "",
   selectedTags: [],
