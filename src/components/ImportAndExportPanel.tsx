@@ -9,9 +9,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import clsx from "classnames"
 import Expandable from "./UI/Expandable"
 import ScrollContainer from "./UI/ScrollContainer"
+import Tags from "./Tags"
 
 type ExportableSnippet = Pick<Snippet, "id" | "content"> & {
   prefix: Snippet["name"]
+  tags: string
 }
 
 type ExportableAllData = {
@@ -27,6 +29,7 @@ function formatSnippet(snippet: Snippet): ExportableSnippet {
     id: snippet.id,
     prefix: snippet.name,
     content: snippet.content,
+    tags: snippet.tags?.join(",") || "",
   }
 }
 
@@ -40,10 +43,15 @@ function parseSnippetsLike(snippetsLike: any[]) {
     if (!(prefix && content)) {
       continue
     }
+    const tags = snippetLike.tags
+      ?.split(",")
+      .map((t: string) => t.trim())
+      .filter(Boolean)
     snippets.push({
       id: snippetLike.id || genId(),
       name: prefix,
       content,
+      tags,
     })
   }
   return snippets
@@ -110,7 +118,7 @@ function ExportSnippets() {
       {Object.keys(FILE_MMIE).map((type) => (
         <button
           key={type}
-          className="btn btn-sm btn-primary"
+          className="btn btn-sm !h-[22px] btn-primary"
           onClick={() => {
             download(type as keyof typeof FILE_MMIE)
           }}
@@ -137,7 +145,7 @@ function ImportSnippets(props: { onImport: (data: ImportableAllData) => void }) 
   }
   return (
     <div className="flex flex-col gap-2">
-      <label className="btn btn-sm btn-primary cursor-pointer">
+      <label className="btn btn-sm !h-[22px] btn-primary cursor-pointer">
         Import Any
         <input
           className="hidden"
@@ -240,7 +248,10 @@ function ImportCandidate(props: {
               </div>
               <div className="flex-1 overflow-hidden">
                 <div className="flex items-center gap-1 overflow-hidden">
-                  <div className="text-sm flex-1 truncate text-left">{snippet.name}</div>
+                  <div className="text-sm flex-1 text-left">
+                    <span className="mr-1.5">{snippet.name}</span>
+                    <Tags tags={snippet.tags} />
+                  </div>
                 </div>
                 <Expandable className="text-xs text-content-300 transition-all">
                   {snippet.content}

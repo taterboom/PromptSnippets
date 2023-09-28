@@ -10,6 +10,8 @@ type PageState = typeof COMMON_SETTINGS & {
   helpPanelVisible: boolean
   importAndExportPanelVisible: boolean
   searchText: string
+  selectedTags: string[]
+  isFiltering: boolean
 
   updateDisabled: (disabled: boolean) => void
   updateCommonSettings: (settings: Partial<typeof COMMON_SETTINGS>) => void
@@ -24,6 +26,8 @@ export const usePageState = create<PageState>()((set) => ({
   helpPanelVisible: false,
   importAndExportPanelVisible: false,
   searchText: "",
+  selectedTags: [],
+  isFiltering: false,
   ...COMMON_SETTINGS,
 
   updateDisabled: (disabled) => {

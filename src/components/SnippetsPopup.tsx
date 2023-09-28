@@ -22,6 +22,7 @@ import { InputPopup } from "./InputPopup"
 import { useIsUnmount } from "../hooks/useIsUnmount"
 import { getVariables } from "../utils/snippet"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./UI/Tooltip"
+import Tags from "./Tags"
 
 function NoSnippets() {
   return (
@@ -316,10 +317,11 @@ function SnippetsPicker(props: { onClose: () => void }) {
                 transition={{ duration: 0.1 }}
                 className="absolute -right-1.5 top-0 translate-x-full"
               >
-                <Container className="overflow-y-auto">
+                <Container className="!overflow-y-auto">
                   <div className="px-4 py-2 text-content-300">
                     <div className="text-sm">
                       <HighlightText
+                        className="mr-1.5"
                         text={activeCandidateSnippet.item.name}
                         positions={
                           activeCandidateSnippet.matches?.filter(
@@ -327,6 +329,7 @@ function SnippetsPicker(props: { onClose: () => void }) {
                           )?.[0]?.indices || []
                         }
                       ></HighlightText>
+                      <Tags tags={activeCandidateSnippet.item.tags} />
                     </div>
                     <div className="text-xs mt-1">
                       <HighlightText

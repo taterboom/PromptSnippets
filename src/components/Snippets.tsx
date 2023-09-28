@@ -11,10 +11,12 @@ import Expandable from "./UI/Expandable"
 import HighlightText from "./UI/HighlightText"
 import KBD from "./UI/KBD"
 import { MiDelete, MiEdit, TablerMoodEmptyFilled } from "./UI/icons"
+import Tags from "./Tags"
 
 function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultMatch[] }) {
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const selectedTags = usePageState((state) => state.selectedTags)
 
   const active = editing || deleting
 
@@ -23,12 +25,14 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
       <div
         className={clsx("group py-3 px-4 hover:bg-base-300 space-y-[3px]", active && "bg-base-300")}
       >
-        <div className="flex items-center gap-2 overflow-hidden">
-          <div className="text-sm flex-1 truncate text-left">
+        <div className="flex gap-2 overflow-hidden">
+          <div className="text-sm flex-1 text-left leading-[18px]">
             <HighlightText
+              className="mr-1.5"
               text={props.data.name}
               positions={props.matches?.filter((match) => match.key === "name")?.[0]?.indices || []}
             ></HighlightText>
+            <Tags tags={props.data.tags} selectedTags={selectedTags} />
           </div>
           <div
             className={clsx(
@@ -57,7 +61,7 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
             </button>
           </div>
         </div>
-        <Expandable className="text-xs text-content-300 transition-all">
+        <Expandable className="text-xs text-content-300 transition-all mt-px">
           <HighlightText
             text={props.data.content}
             positions={
@@ -118,24 +122,39 @@ function NoSnippets(props: { onCreate: () => void }) {
 export default function Snippets(props: { onCreate: () => void }) {
   const snippets = useSnippets(snippetsSelectors.snippets)
   const searchText = usePageState((state) => state.searchText)
+  const selectedTags = usePageState((state) => state.selectedTags)
+  const tags = useSnippets(snippetsSelectors.tags)
+  const validSelectedTags = useMemo(
+    () => selectedTags.filter((t) => tags.includes(t)),
+    [selectedTags, tags]
+  )
+  const candidateSnippets = useMemo(
+    () =>
+      validSelectedTags.length > 0
+        ? snippets.filter((item) => validSelectedTags.some((t) => item.tags?.includes(t)))
+        : snippets,
+    [validSelectedTags, snippets]
+  )
   const fuseInstance = useMemo(() => {
-    return new Fuse<Snippet>(snippets, {
+    return new Fuse<Snippet>(candidateSnippets, {
       includeMatches: true,
       keys: ["name", { name: "content", weight: 0.5 }],
     })
-  }, [snippets])
-  const candidateSnippets = useMemo(() => {
+  }, [candidateSnippets])
+  const searchedSnippets = useMemo(() => {
     return searchText
       ? fuseInstance.search(searchText)
-      : (snippets.map((item) => ({ item })) as ReturnType<typeof fuseInstance.search<Snippet>>)
-  }, [fuseInstance, snippets, searchText])
+      : (candidateSnippets.map((item) => ({ item })) as ReturnType<
+          typeof fuseInstance.search<Snippet>
+        >)
+  }, [fuseInstance, candidateSnippets, searchText])
 
   return (
-    <div className="divide-y divide-base-400">
+    <div className="divide-y divide-base-300">
       {snippets.length === 0 ? (
         <NoSnippets onCreate={props.onCreate}></NoSnippets>
-      ) : candidateSnippets.length > 0 ? (
-        candidateSnippets.map((candidateSnippet) => {
+      ) : searchedSnippets.length > 0 ? (
+        searchedSnippets.map((candidateSnippet) => {
           return (
             <SnippetCard
               key={candidateSnippet.item.id}
