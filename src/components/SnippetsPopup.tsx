@@ -172,6 +172,8 @@ function SnippetsPicker(props: { onClose: () => void }) {
       ? fuseInstance.search(text)
       : (snippets.map((item) => ({ item })) as ReturnType<typeof fuseInstance.search<Snippet>>)
   }, [fuseInstance, snippets, text])
+  const candidateSnippetsRef = useRef(candidateSnippets)
+  candidateSnippetsRef.current = candidateSnippets
   const activeCandidateSnippet = useMemo(() => {
     return candidateSnippets.find((item) => item.item.id === activeId)
   }, [candidateSnippets, activeId])
@@ -207,19 +209,23 @@ function SnippetsPicker(props: { onClose: () => void }) {
     if (!popupActive) return
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
+        const currentSnippets = candidateSnippetsRef.current
+        if (currentSnippets.length === 0) return
         e.preventDefault()
         setActiveId((activeId) => {
-          const activeIndex = snippets.findIndex((item) => item.id === activeId)
-          const nextIndex = activeIndex < snippets.length - 1 ? activeIndex + 1 : 0
-          return snippets[nextIndex].id
+          const activeIndex = currentSnippets.findIndex(({ item }) => item.id === activeId)
+          const nextIndex = activeIndex < currentSnippets.length - 1 ? activeIndex + 1 : 0
+          return currentSnippets[nextIndex].item.id
         })
       }
       if (e.key === "ArrowUp") {
+        const currentSnippets = candidateSnippetsRef.current
+        if (currentSnippets.length === 0) return
         e.preventDefault()
         setActiveId((activeId) => {
-          const activeIndex = snippets.findIndex((item) => item.id === activeId)
-          const nextIndex = activeIndex > 0 ? activeIndex - 1 : snippets.length - 1
-          return snippets[nextIndex].id
+          const activeIndex = currentSnippets.findIndex(({ item }) => item.id === activeId)
+          const nextIndex = activeIndex > 0 ? activeIndex - 1 : currentSnippets.length - 1
+          return currentSnippets[nextIndex].item.id
         })
       }
       if (e.key === "Enter") {
@@ -390,16 +396,14 @@ function ControlBar(props: { onClose: () => void }) {
         <MiClose />
       </button>
       <Tooltip>
-        <TooltipTrigger>
-          <button
-            className="btn btn-icon btn-sm"
-            onClick={() => {
-              updateDisabled(true)
-              props.onClose()
-            }}
-          >
-            <TablerPower />
-          </button>
+        <TooltipTrigger
+          className="btn btn-icon btn-sm"
+          onClick={() => {
+            updateDisabled(true)
+            props.onClose()
+          }}
+        >
+          <TablerPower />
         </TooltipTrigger>
         <TooltipContent className="w-40 text-xs text-content-200 z-[1000000] bg-base-100/70 backdrop-blur border border-neutral-200 p-2 rounded menu-popup-shadow">
           Disable the popup in this page. You can then open it in the settings by click the
@@ -445,9 +449,9 @@ function SnippetsPopupInner() {
         setVisible(false)
       }
     }
-    document.addEventListener("keydown", closePanel)
+    document.addEventListener("keydown", closePanel, { capture: true })
     return () => {
-      document.removeEventListener("keydown", closePanel)
+      document.removeEventListener("keydown", closePanel, { capture: true })
     }
   }, [target])
 
