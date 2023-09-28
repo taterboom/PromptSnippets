@@ -72,4 +72,12 @@ export const useSnippets = create<SnippetsState>()(
 
 export const snippetsSelectors = {
   snippets: (state: SnippetsState) => state.ids.map((id) => state.snippetsStore[id]),
+  tags: (state: SnippetsState) => [
+    ...new Set(
+      Object.values(snippetsSelectors.snippets(state))
+        .map((item) => item.tags)
+        .filter(Boolean)
+        .flat() as string[]
+    ),
+  ],
 }

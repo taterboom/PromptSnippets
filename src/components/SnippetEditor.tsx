@@ -6,6 +6,7 @@ import { usePageState } from "../store/pageState"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./UI/Tooltip"
 import { MiCircleHelp } from "./UI/icons"
 import { VARIABLE_DEFAULT_VALUE_SEPARATOR } from "../constants"
+import { Snippet } from "../types"
 
 type SnippetEditorProps = {
   id?: string
@@ -20,6 +21,7 @@ export default function SnippetEditor(props: SnippetEditorProps) {
   const updateSnippet = useSnippets((state) => state.updateSnippet)
   const [content, setContent] = useState(currentSnippet?.content || "")
   const [prefix, setPrefix] = useState(currentSnippet?.name || "")
+  const [tagsStr, setTagsStr] = useState(currentSnippet?.tags?.join(",") || "")
   const wrapper = useMemo(() => wrapperSymbol[0]?.split?.(/\s+/) ?? ["", ""], [wrapperSymbol])
 
   return (
@@ -69,19 +71,46 @@ export default function SnippetEditor(props: SnippetEditorProps) {
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
       </div>
+      <div className="space-y-1">
+        <div className="text-sm text-content-100 flex items-center gap-1">
+          <span>Tags</span>
+          <span className="text-xs text-content-400">(optional)</span>
+        </div>
+        <input
+          tabIndex={3}
+          placeholder="Separate with a comma"
+          type="text"
+          className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
+          value={tagsStr}
+          onChange={(e) => {
+            setTagsStr(e.target.value)
+          }}
+        ></input>
+      </div>
       <div className="flex justify-end gap-2 items-center">
         <button className="btn" onClick={props.onClose}>
           Cancel
         </button>
         <button
-          tabIndex={3}
+          tabIndex={4}
           className="btn btn-primary"
           onClick={() => {
             if (!(prefix && content)) {
               alert('Please fill in "Prefix" and "Content"')
               return
             }
-            const snippet = { name: prefix, content }
+            const snippet: Omit<Snippet, "id"> = {
+              name: prefix,
+              content,
+              tags: [
+                ...new Set(
+                  tagsStr
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter(Boolean)
+                ),
+              ],
+            }
             if (currentSnippet) {
               updateSnippet({ ...currentSnippet, ...snippet })
             } else {

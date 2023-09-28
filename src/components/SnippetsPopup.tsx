@@ -14,6 +14,7 @@ import { throttle } from "lodash"
 import { InputPopup } from "./InputPopup"
 import { useIsUnmount } from "../hooks/useIsUnmount"
 import { getVariables } from "../utils/snippet"
+import Tags from "./Tags"
 
 function NoSnippets() {
   return (
@@ -294,6 +295,7 @@ function SnippetsPicker() {
                   <div className="px-4 py-2 text-content-300">
                     <div className="text-sm">
                       <HighlightText
+                        className="mr-1.5"
                         text={activeCandidateSnippet.item.name}
                         positions={
                           activeCandidateSnippet.matches?.filter(
@@ -301,6 +303,7 @@ function SnippetsPicker() {
                           )?.[0]?.indices || []
                         }
                       ></HighlightText>
+                      <Tags tags={activeCandidateSnippet.item.tags} />
                     </div>
                     <div className="text-xs mt-1">
                       <HighlightText
