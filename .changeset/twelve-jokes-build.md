@@ -1,5 +1,0 @@
----
-"promptsnippets": minor
----
-
-support tags
