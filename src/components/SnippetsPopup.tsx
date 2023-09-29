@@ -406,8 +406,7 @@ function ControlBar(props: { onClose: () => void }) {
           <TablerPower />
         </TooltipTrigger>
         <TooltipContent className="w-40 text-xs text-content-200 z-[1000000] bg-base-100/70 backdrop-blur border border-neutral-200 p-2 rounded menu-popup-shadow">
-          Disable the popup in this page. You can then open it in the settings by click the
-          extension icon.
+          Disable the popup in this page. You can enable it later in the settings panel.
         </TooltipContent>
       </Tooltip>
     </div>
