@@ -30,7 +30,7 @@ export const DEFAULT_SNIPPET_DEMO_1: Snippet = {
 export const DEFAULT_SNIPPET_DEMO_2: Snippet = {
   id: "default-snippet-demo-2",
   name: "Summary",
-  content: "summarize the text in {{number}} words: {{text}}",
+  content: "summarize the text in {{number:20}} words: {{text}}",
 }
 
 // 🟡 should change docs if changed it

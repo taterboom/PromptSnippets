@@ -24,6 +24,7 @@ window.chrome = {
   runtime: {
     ...window?.chrome?.runtime,
     getURL: (url: string) => url,
+    sendMessage: (...args: any[]) => Promise.resolve(),
   },
 }
 

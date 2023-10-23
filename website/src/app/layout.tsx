@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ></script>
       </head>
       <body className={inter.className}>{children}</body>
-      <Script src="/playground-cc70ed46.js"></Script>
+      <Script src="/playground-77603338.js"></Script>
     </html>
   )
 }
