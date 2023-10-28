@@ -3,7 +3,13 @@ import clsx from "classnames"
 import { motion, AnimatePresence } from "framer-motion"
 import { usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
-import { awesomeSetSelectionRange, selectNextRange, setInputValue } from "../utils/range"
+import {
+  awesomeSetSelectionRange,
+  getInputValue,
+  selectNextRange,
+  setChangeListener,
+  setInputValue,
+} from "../utils/dom"
 import KBD from "./UI/KBD"
 import Fuse from "fuse.js"
 import { Snippet } from "../types"
@@ -156,7 +162,7 @@ function SnippetsPicker(props: { onClose: () => void }) {
   const activeIdRef = useRef(activeId)
   activeIdRef.current = activeId
   const [text, setText] = useState<string | null>(
-    target ? formatSearchText(triggerSymbol, target.value) : null
+    target ? formatSearchText(triggerSymbol, getInputValue(target)) : null
   )
   const [currentSelectedSnippet, setCurrentSelectedSnippet] = useState<Snippet | null>(null)
   const [popupActive, setPopupActive] = useState(true)
@@ -195,15 +201,11 @@ function SnippetsPicker(props: { onClose: () => void }) {
       setText(null)
       return
     }
-    const onChange = (e: any) => {
-      setText(e?.target?.value ? formatSearchText(triggerSymbol, e.target.value) : null)
+    const onChange = (text: string) => {
+      setText(text ? formatSearchText(triggerSymbol, text) : null)
     }
-    target.addEventListener("input", onChange)
-    target.addEventListener("change", onChange)
-    return () => {
-      target.removeEventListener("input", onChange)
-      target.removeEventListener("change", onChange)
-    }
+    const unsubscribe = setChangeListener(target, onChange)
+    return unsubscribe
   }, [target, triggerSymbol])
   useEffect(() => {
     if (!popupActive) return
@@ -279,14 +281,16 @@ function SnippetsPicker(props: { onClose: () => void }) {
           className="relative"
           variants={{ active: { opacity: 1 }, inactive: { opacity: 0 } }}
           animate={popupActive ? "active" : "inactive"}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
         >
-          <Container className="flex flex-col">
+          <Container
+            className="flex flex-col"
+            onMouseEnter={() => {
+              setHover(true)
+            }}
+            onMouseLeave={() => {
+              setHover(false)
+            }}
+          >
             <>
               <div className="p-1 flex-1 overflow-y-auto">
                 {candidateSnippets.map(({ item, matches }) => (
@@ -337,7 +341,7 @@ function SnippetsPicker(props: { onClose: () => void }) {
                       ></HighlightText>
                       <Tags tags={activeCandidateSnippet.item.tags} />
                     </div>
-                    <div className="text-xs mt-1">
+                    <div className="text-xs mt-1 whitespace-pre-wrap">
                       <HighlightText
                         text={activeCandidateSnippet.item.content}
                         positions={
@@ -518,16 +522,12 @@ export default function SnippetsPopup() {
       return
     }
     const checkVisible = (text: string) => triggerSymbol.some((item) => text.startsWith?.(item))
-    setVisible(checkVisible(target?.value))
-    const onChange = (e: any) => {
-      setVisible(checkVisible(e?.target?.value))
+    setVisible(checkVisible(getInputValue(target)))
+    const onChange = (text: string) => {
+      setVisible(checkVisible(text))
     }
-    target.addEventListener("input", onChange)
-    target.addEventListener("change", onChange)
-    return () => {
-      target.removeEventListener("input", onChange)
-      target.removeEventListener("change", onChange)
-    }
+    const unsubscribe = setChangeListener(target, onChange)
+    return unsubscribe
   }, [target, triggerSymbol])
 
   return (

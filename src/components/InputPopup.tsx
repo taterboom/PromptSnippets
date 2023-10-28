@@ -55,7 +55,7 @@ export function InputPopup(props: InputPopupProps) {
           <div className="flex items-center gap-2 overflow-hidden font-medium">
             {props.snippet.name}
           </div>
-          <Expandable className="text-xs text-content-300 transition-all">
+          <Expandable className="text-xs text-content-300 transition-all whitespace-pre-wrap">
             {props.snippet.content}
           </Expandable>
         </div>

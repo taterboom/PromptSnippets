@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 import { VARIABLE_DEFAULT_VALUE_SEPARATOR } from "../../constants"
-import { getSnippetChunks, processVariableSelection } from "../snippet"
+import { getSnippetChunks, parseVariable, processVariableSelection } from "../snippet"
 
 test("getSnippetChunks should be ok", () => {
   expect(getSnippetChunks("translate the text", ["{{ }}"])).toEqual([
@@ -69,4 +69,20 @@ test("processVariableSelection should be ok", () => {
       inputEl
     )
   ).toEqual([2, 4])
+})
+
+test("parseVariable should be ok", () => {
+  expect(parseVariable("lang")).toEqual({ name: "lang" })
+  expect(parseVariable("lang" + VARIABLE_DEFAULT_VALUE_SEPARATOR + "zh")).toEqual({
+    name: "lang",
+    defaultValue: "zh",
+  })
+  expect(
+    parseVariable(
+      "lang" + VARIABLE_DEFAULT_VALUE_SEPARATOR + "zh" + VARIABLE_DEFAULT_VALUE_SEPARATOR + "cn"
+    )
+  ).toEqual({
+    name: "lang",
+    defaultValue: "zh" + VARIABLE_DEFAULT_VALUE_SEPARATOR + "cn",
+  })
 })

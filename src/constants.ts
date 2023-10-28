@@ -33,5 +33,44 @@ export const DEFAULT_SNIPPET_DEMO_2: Snippet = {
   content: "summarize the text in {{number:20}} words: {{text}}",
 }
 
+export const DEFAULT_SNIPPET_DEMO_3: Snippet = {
+  id: "default-snippet-demo-3",
+  name: "Template",
+  content: `# Role
+{{Role:First Principle Thinker}}
+## Profile
+{{Profile:You are a person who solves problems using first principles thinking.}}
+## Reference
+{{Reference:The first principle is an idea to break down complicated problems into basic elements and then reassemble them from the ground up.}}
+## Goals
+{{Goals:You will help users to solve problems using first principles thinking.}}
+## Input
+{{Input:You will receive a problem.}}
+## Workflow
+{{Workflow:1. Define the problem.
+2. Break it down into basic elements.
+3. Construct solutions.}}
+## Output
+{{Output:output format:
+\`\`\`
+# Question
+<user question>
+## Workflow
+### Define the problem
+<Define the problem>
+### Break it down into basic elements
+<Break it down into basic elements>
+### Construct solutions
+<Construct solutions>
+## Answer
+<Conclusion>
+\`\`\`}}
+## Examples
+{{Examples}}
+## Initialization
+{{Initialization:Hi there, I am a first principle thinker. I can help you to solve problems using first principles thinking. Give me a problem and I will help you to solve it.}}
+`,
+}
+
 // 🟡 should change docs if changed it
 export const VARIABLE_DEFAULT_VALUE_SEPARATOR = ":"

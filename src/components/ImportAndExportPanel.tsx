@@ -259,7 +259,7 @@ function ImportCandidate(props: {
                     <Tags tags={snippet.tags} />
                   </div>
                 </div>
-                <Expandable className="text-xs text-content-300 transition-all">
+                <Expandable className="text-xs text-content-300 transition-all whitespace-pre-wrap">
                   {snippet.content}
                 </Expandable>
               </div>

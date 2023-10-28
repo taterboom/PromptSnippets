@@ -61,7 +61,7 @@ function SnippetCard(props: { data: Snippet; matches?: readonly Fuse.FuseResultM
             </button>
           </div>
         </div>
-        <Expandable className="text-xs text-content-300 transition-all mt-px">
+        <Expandable className="text-xs text-content-300 transition-all mt-px whitespace-pre-wrap">
           <HighlightText
             text={props.data.content}
             positions={

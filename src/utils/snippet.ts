@@ -1,5 +1,12 @@
 import { VARIABLE_DEFAULT_VALUE_SEPARATOR } from "../constants"
-import { RangeObj, SelectNextRangeProcess, getNextRange, setInputValue } from "./range"
+import {
+  RangeObj,
+  SelectNextRangeProcess,
+  getInputValue,
+  getNextRange,
+  getSelectionRange,
+  setInputValue,
+} from "./dom"
 
 export const parseWrapperSymbol = (wrapperSymbol: string) => {
   return wrapperSymbol
@@ -14,11 +21,15 @@ export type Variable = {
 }
 
 export const parseVariable = (content: string): Variable => {
-  const [name, defaultValue] = content.split(VARIABLE_DEFAULT_VALUE_SEPARATOR)
-  return {
+  const [name] = content.split(VARIABLE_DEFAULT_VALUE_SEPARATOR)
+  const result: Variable = {
     name,
-    defaultValue,
   }
+  const defaultValue = content.slice(name.length + VARIABLE_DEFAULT_VALUE_SEPARATOR.length)
+  if (defaultValue) {
+    result.defaultValue = defaultValue
+  }
+  return result
 }
 
 export type SnippetVariable = Variable & {
@@ -92,11 +103,13 @@ export const getVariables = (snippetContent: string, wrapperSymbol: string[]) =>
 
 export const processVariableSelection: SelectNextRangeProcess = (nextRange, _, inputEl) => {
   if (nextRange) {
+    const currentSelectionRange = getSelectionRange(inputEl)
+    // set default value
     if (
-      nextRange.range[0] === inputEl.selectionStart &&
-      nextRange.range[1] === inputEl.selectionEnd
+      nextRange.range[0] === currentSelectionRange[0] &&
+      nextRange.range[1] === currentSelectionRange[1]
     ) {
-      const text = inputEl.value
+      const text = getInputValue(inputEl)
       const [left, right] = parseWrapperSymbol(nextRange.wrapper)
       const variable = parseVariable(
         text.slice(nextRange.range[0] + left.length, nextRange.range[1] - right.length).trim()
