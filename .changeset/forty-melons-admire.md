@@ -1,0 +1,5 @@
+---
+"promptsnippets": major
+---
+
+Support Bard
