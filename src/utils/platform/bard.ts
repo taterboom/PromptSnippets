@@ -47,7 +47,6 @@ export function setBardElementSelectionRange(element: BardElement, start: number
   if (!selectedText) return
   const textNode = element.children?.[0]?.firstChild
   if (!textNode) return
-  console.log(textNode, start, end)
   const selectedRange = document.createRange()
   selectedRange.setStart(textNode, start)
   selectedRange.setEnd(textNode, end)
