@@ -14,9 +14,3 @@ Whether you're coding, blogging, or emailing, turn repetitive typing into a sing
 Create variable snippets in the management panel. You can open the panel by clicking the extension icon.
 
 Type `/` in any input box, and select the snippets, use `Tab` to navigate between variables and fill them.
-
-## TODO
-
-- [x] Input popup box with the variables needed when calling the snippet
-- [x] Fill variables with the same name
-- [x] Import & Export
