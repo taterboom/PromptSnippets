@@ -1,5 +1,11 @@
 # promptsnippets
 
+## 1.0.0
+
+### Major Changes
+
+- [#18](https://github.com/taterboom/PromptSnippets/pull/18) [`79566d4`](https://github.com/taterboom/PromptSnippets/commit/79566d4850e98e64f680498b8a62d66807bbf428) Thanks [@taterboom](https://github.com/taterboom)! - Support Bard
+
 ## 0.3.0
 
 ### Minor Changes
