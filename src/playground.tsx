@@ -4,17 +4,28 @@ import EnhanceInput from "./components/EnhanceInput"
 import MenuPanel from "./components/MenuPanel"
 import SnippetsPopup from "./components/SnippetsPopup"
 import { useSnippets } from "./store/snippets"
-import { DEFAULT_SNIPPET_DEMO_1, DEFAULT_SNIPPET_DEMO_2, DEFAULT_SNIPPET_GUIDE } from "./constants"
+import {
+  DEFAULT_SNIPPET_DEMO_1,
+  DEFAULT_SNIPPET_DEMO_2,
+  DEFAULT_SNIPPET_DEMO_3,
+  DEFAULT_SNIPPET_GUIDE,
+} from "./constants"
 import { usePageState } from "./store/pageState"
 import { createRoot } from "react-dom/client"
 import { ROOT_ID } from "./constants"
 
 useSnippets.setState({
-  ids: [DEFAULT_SNIPPET_GUIDE.id, DEFAULT_SNIPPET_DEMO_1.id, DEFAULT_SNIPPET_DEMO_2.id],
+  ids: [
+    DEFAULT_SNIPPET_GUIDE.id,
+    DEFAULT_SNIPPET_DEMO_3.id,
+    DEFAULT_SNIPPET_DEMO_1.id,
+    DEFAULT_SNIPPET_DEMO_2.id,
+  ],
   snippetsStore: {
     [DEFAULT_SNIPPET_GUIDE.id]: DEFAULT_SNIPPET_GUIDE,
     [DEFAULT_SNIPPET_DEMO_1.id]: DEFAULT_SNIPPET_DEMO_1,
     [DEFAULT_SNIPPET_DEMO_2.id]: DEFAULT_SNIPPET_DEMO_2,
+    [DEFAULT_SNIPPET_DEMO_3.id]: DEFAULT_SNIPPET_DEMO_3,
   },
 })
 usePageState.setState({ disabled: false })

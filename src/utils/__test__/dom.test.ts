@@ -1,5 +1,5 @@
 import { expect, test } from "vitest"
-import { getNextRange } from "../range"
+import { getNextRange } from "../dom"
 
 test("getNextRange should return the next range", () => {
   expect(getNextRange(["{ }"], "a{b}")?.range).toEqual([1, 4])

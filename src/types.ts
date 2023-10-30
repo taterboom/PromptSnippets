@@ -1,3 +1,5 @@
+import { BardElement } from "./utils/platform/bard"
+
 export type Snippet = {
   id: string
   name: string
@@ -15,3 +17,5 @@ export type ServerStore = {
   triggerSymbol: string[]
   inputMode: InputMode
 }
+
+export type InputElement = HTMLInputElement | HTMLTextAreaElement | BardElement

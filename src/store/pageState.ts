@@ -1,9 +1,10 @@
 import { create } from "zustand"
 import { COMMON_SETTINGS } from "../constants"
+import { InputElement } from "../types"
 
 type PageState = typeof COMMON_SETTINGS & {
   disabled: boolean
-  currentInput: HTMLInputElement | HTMLTextAreaElement | null
+  currentInput: InputElement | null
   snippetsPopupVisible: boolean
   menuPanelVisible: boolean
   settingsPanelVisible: boolean

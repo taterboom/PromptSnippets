@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { ROOT_ID } from "../constants"
 import { usePageState } from "../store/pageState"
-import { selectNextRange } from "../utils/range"
+import { isInputElement, selectNextRange } from "../utils/dom"
 import { processVariableSelection } from "../utils/snippet"
 
 export default function () {
@@ -11,20 +11,14 @@ export default function () {
     const root = document.getElementById(ROOT_ID)
     if (!root) return
     // check current active element
-    if (
-      document.activeElement instanceof HTMLInputElement ||
-      document.activeElement instanceof HTMLTextAreaElement
-    ) {
+    if (isInputElement(document.activeElement)) {
       usePageState.setState({ currentInput: document.activeElement })
     }
     // listen to input element
     const onKeydown = (e: KeyboardEvent) => {
       const target = e.target
-      if (!target || !(target instanceof Node)) return
-      if (
-        !root.contains(target) &&
-        (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)
-      ) {
+      if (!target || !(target instanceof Element)) return
+      if (!root.contains(target) && isInputElement(target)) {
         usePageState.setState({ currentInput: target })
         if (e.key === "Tab") {
           e.preventDefault()
@@ -34,7 +28,7 @@ export default function () {
         // usePageState.setState({ currentInput: null })
       }
     }
-    document.addEventListener("keydown", onKeydown)
+    document.addEventListener("keydown", onKeydown, { capture: true })
     return () => {
       document.removeEventListener("keydown", onKeydown)
     }
