@@ -1,4 +1,3 @@
-import { debounce } from "lodash"
 import {
   COMMON_SETTINGS,
   DEFAULT_ENABLED_WEBSITES,
@@ -6,7 +5,6 @@ import {
   DEFAULT_SNIPPET_GUIDE,
 } from "./constants"
 import { ServerStore, Snippet } from "./types"
-import { getUriKey } from "./utils/uri"
 
 let store: ServerStore
 
@@ -90,24 +88,13 @@ async function init() {
     })
   })
 
-  const syncEnableWebsites = debounce(() => {
-    chrome.storage.sync.set({ enabledWebsites: store.enabledWebsites })
-  }, 1000)
   chrome.commands.onCommand.addListener((command, tab) => {
-    console.log("command", command, tab)
+    console.log("command", command, tab.url)
     if (command === "toggle-prompt-snippets") {
-      if (tab.id && tab.url) {
-        const uriKey = getUriKey(tab.url)
-        if (store.enabledWebsites.includes(uriKey)) {
-          store.enabledWebsites = store.enabledWebsites.filter((url) => url !== uriKey)
-        } else {
-          store.enabledWebsites = [...store.enabledWebsites, uriKey]
-        }
+      if (tab.id) {
         chrome.tabs.sendMessage(tab.id, {
-          type: "prompt-snippets/update-store",
-          payload: store,
+          type: "prompt-snippets/toggle-prompt-snippets",
         })
-        syncEnableWebsites()
       }
     }
   })
@@ -146,21 +133,6 @@ async function init() {
         })
         return true
       }
-    }
-    if (message?.type === "prompt-snippets/toggle") {
-      if (!sender.tab?.id || !sender.tab?.url) return
-      const uriKey = getUriKey(sender.tab.url)
-      const { disabled } = message.payload
-      if (store.enabledWebsites.includes(uriKey) && !disabled) {
-        store.enabledWebsites = store.enabledWebsites.filter((url) => url !== uriKey)
-      } else if (!store.enabledWebsites.includes(uriKey) && disabled) {
-        store.enabledWebsites = [...store.enabledWebsites, uriKey]
-      }
-      chrome.tabs.sendMessage(sender.tab.id, {
-        type: "prompt-snippets/update-store",
-        payload: store,
-      })
-      syncEnableWebsites()
     }
     if (message.type === "prompt-snippets/get-show-new") {
       if (!sender.tab?.id) return
