@@ -29,6 +29,11 @@
     --color-danger-200: 255 118 124;
     --color-danger-content-100: 255 255 255;
     --color-danger-content-200: 255 255 255;
+
+    --color-success-100: 76 183 130;
+    --color-success-200: 96 230 158;
+    --color-success-content-100: 255 255 255;
+    --color-success-content-200: 255 255 255;
 }
 
 .dark {
@@ -56,6 +61,11 @@
     --color-danger-200: 255 118 124;
     --color-danger-content-100: 255 255 255;
     --color-danger-content-200: 255 255 255;
+
+    --color-success-100: 76 183 130;
+    --color-success-200: 96 230 158;
+    --color-success-content-100: 255 255 255;
+    --color-success-content-200: 255 255 255;
 }
 
 .light, .dark {
@@ -66,11 +76,11 @@
 /* shadow */
 
 .light .menu-popup-shadow {
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 56px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 12px 56px;
 }
 
 .dark .menu-popup-shadow {
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 12px 56px;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 12px 56px;
 }
 
 .light .popup-shadow {

@@ -1,9 +1,10 @@
 import { create } from "zustand"
 import { COMMON_SETTINGS } from "../constants"
 import { InputElement } from "../types"
+import { debouncedWriteToChromeStorage } from "../utils/extensionUtils"
+import { memoMatchUri } from "../utils/uri"
 
 type PageState = typeof COMMON_SETTINGS & {
-  disabled: boolean
   currentInput: InputElement | null
   snippetsPopupVisible: boolean
   menuPanelVisible: boolean
@@ -12,13 +13,13 @@ type PageState = typeof COMMON_SETTINGS & {
   searchText: string
   selectedTags: string[]
   isFiltering: boolean
+  enabledWebsites: string[]
 
-  updateDisabled: (disabled: boolean) => void
   updateCommonSettings: (settings: Partial<typeof COMMON_SETTINGS>) => void
+  updateEnabledWebsites: (enabledWebsites: string[]) => void
 }
 
 export const usePageState = create<PageState>()((set) => ({
-  disabled: true,
   currentInput: null,
   snippetsPopupVisible: false,
   menuPanelVisible: false,
@@ -27,20 +28,21 @@ export const usePageState = create<PageState>()((set) => ({
   searchText: "",
   selectedTags: [],
   isFiltering: false,
+  enabledWebsites: [],
   ...COMMON_SETTINGS,
-
-  updateDisabled: (disabled) => {
-    set({ disabled })
-    chrome.runtime.sendMessage({
-      type: "prompt-snippets/toggle",
-      payload: {
-        disabled,
-      },
-    })
-  },
 
   updateCommonSettings: (settings: Partial<typeof COMMON_SETTINGS>) => {
     set(settings)
     chrome.storage.sync.set(settings)
   },
+  updateEnabledWebsites(enabledWebsites: string[]) {
+    set({ enabledWebsites })
+    debouncedWriteToChromeStorage({ enabledWebsites })
+  },
 }))
+
+export const pageStateSelectors = {
+  disabled: (state: PageState) => {
+    return !state.enabledWebsites.some((pattern) => memoMatchUri(window.location.href, pattern))
+  },
+}

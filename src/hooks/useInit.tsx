@@ -19,7 +19,7 @@ export function useInit() {
         return acc
       }, {} as typeof COMMON_SETTINGS)
       usePageState.setState({
-        disabled: serverStore.disabledUrls?.includes?.(getUriKey(window.location.href)) ?? true,
+        enabledWebsites: serverStore.enabledWebsites,
         ...commonSettings,
       })
     }

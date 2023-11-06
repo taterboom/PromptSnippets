@@ -1,7 +1,7 @@
 import { debounce } from "lodash"
 import {
   COMMON_SETTINGS,
-  DEFAULT_DISABLED_URLS,
+  DEFAULT_ENABLED_WEBSITES,
   DEFAULT_IDS,
   DEFAULT_SNIPPET_GUIDE,
 } from "./constants"
@@ -16,10 +16,10 @@ async function init() {
     const {
       isUsed = false,
       ids = DEFAULT_IDS,
-      disabledUrls = DEFAULT_DISABLED_URLS,
+      enabledWebsites = DEFAULT_ENABLED_WEBSITES,
       ...commonSettings
     } = await chrome.storage.sync
-      .get(["isUsed", "ids", "disabledUrls", ...Object.keys(COMMON_SETTINGS)])
+      .get(["isUsed", "ids", "enabledWebsites", ...Object.keys(COMMON_SETTINGS)])
       .catch(() => ({} as any))
     let snippetsStore: Record<string, Snippet> = {}
     if (ids?.length > 0) {
@@ -36,7 +36,7 @@ async function init() {
     store = {
       ids,
       snippetsStore,
-      disabledUrls,
+      enabledWebsites,
       ...COMMON_SETTINGS,
       ...commonSettings,
     }
@@ -75,8 +75,8 @@ async function init() {
           return
         }
       }
-      if (key === "disabledUrls") {
-        store.disabledUrls = changeObj.newValue ?? DEFAULT_DISABLED_URLS
+      if (key === "enabledWebsites") {
+        store.enabledWebsites = changeObj.newValue ?? DEFAULT_ENABLED_WEBSITES
       } else if (key === "ids") {
         store.ids = changeObj.newValue ?? DEFAULT_IDS
       } else {
@@ -90,24 +90,24 @@ async function init() {
     })
   })
 
-  const syncDisabledUrls = debounce(() => {
-    chrome.storage.sync.set({ disabledUrls: store.disabledUrls })
+  const syncEnableWebsites = debounce(() => {
+    chrome.storage.sync.set({ enabledWebsites: store.enabledWebsites })
   }, 1000)
   chrome.commands.onCommand.addListener((command, tab) => {
     console.log("command", command, tab)
     if (command === "toggle-prompt-snippets") {
       if (tab.id && tab.url) {
         const uriKey = getUriKey(tab.url)
-        if (store.disabledUrls.includes(uriKey)) {
-          store.disabledUrls = store.disabledUrls.filter((url) => url !== uriKey)
+        if (store.enabledWebsites.includes(uriKey)) {
+          store.enabledWebsites = store.enabledWebsites.filter((url) => url !== uriKey)
         } else {
-          store.disabledUrls = [...store.disabledUrls, uriKey]
+          store.enabledWebsites = [...store.enabledWebsites, uriKey]
         }
         chrome.tabs.sendMessage(tab.id, {
           type: "prompt-snippets/update-store",
           payload: store,
         })
-        syncDisabledUrls()
+        syncEnableWebsites()
       }
     }
   })
@@ -151,16 +151,16 @@ async function init() {
       if (!sender.tab?.id || !sender.tab?.url) return
       const uriKey = getUriKey(sender.tab.url)
       const { disabled } = message.payload
-      if (store.disabledUrls.includes(uriKey) && !disabled) {
-        store.disabledUrls = store.disabledUrls.filter((url) => url !== uriKey)
-      } else if (!store.disabledUrls.includes(uriKey) && disabled) {
-        store.disabledUrls = [...store.disabledUrls, uriKey]
+      if (store.enabledWebsites.includes(uriKey) && !disabled) {
+        store.enabledWebsites = store.enabledWebsites.filter((url) => url !== uriKey)
+      } else if (!store.enabledWebsites.includes(uriKey) && disabled) {
+        store.enabledWebsites = [...store.enabledWebsites, uriKey]
       }
       chrome.tabs.sendMessage(sender.tab.id, {
         type: "prompt-snippets/update-store",
         payload: store,
       })
-      syncDisabledUrls()
+      syncEnableWebsites()
     }
     if (message.type === "prompt-snippets/get-show-new") {
       if (!sender.tab?.id) return
