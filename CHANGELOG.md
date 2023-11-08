@@ -1,5 +1,11 @@
 # promptsnippets
 
+## 1.1.0
+
+### Minor Changes
+
+- [#20](https://github.com/taterboom/PromptSnippets/pull/20) [`678fbcf`](https://github.com/taterboom/PromptSnippets/commit/678fbcfa5f8f3ca15604ac54fecb69083f1dce5a) Thanks [@taterboom](https://github.com/taterboom)! - support configure enabled websites
+
 ## 1.0.0
 
 ### Major Changes
