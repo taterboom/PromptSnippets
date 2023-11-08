@@ -19,7 +19,7 @@ export function useInit() {
         return acc
       }, {} as typeof COMMON_SETTINGS)
       usePageState.setState({
-        disabled: serverStore.disabledUrls?.includes?.(getUriKey(window.location.href)) ?? true,
+        enabledWebsites: serverStore.enabledWebsites,
         ...commonSettings,
       })
     }
@@ -37,6 +37,17 @@ export function useInit() {
         usePageState.setState((state) => {
           return { menuPanelVisible: !state.menuPanelVisible }
         })
+      }
+      if (message?.type === "prompt-snippets/toggle-prompt-snippets") {
+        const { enabledWebsites, updateEnabledWebsites } = usePageState.getState()
+        const uriKey = getUriKey(window.location.href)
+        let newEnabledWebsites
+        if (enabledWebsites.includes(uriKey)) {
+          newEnabledWebsites = enabledWebsites.filter((url) => url !== uriKey)
+        } else {
+          newEnabledWebsites = [...enabledWebsites, uriKey]
+        }
+        updateEnabledWebsites(newEnabledWebsites)
       }
     })
     const fetchStore = () => {

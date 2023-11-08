@@ -4,7 +4,33 @@ import { Image } from "@/components/DocComponents"
 
 <Image s="settings" width={353} height={417}></Image>
 
-- Enable
-- Variables input mode
-- Wrapper symbol
-- Trigger symbol
+## Enabled Websites
+
+PromptSnippets is only enabled by default on
+
+- \*.openai.com
+- poe.com
+- bard.google.com
+
+You can expand the list of enabled websites by accessing the "Enabled Websites" option in the settings panel of the extension.
+
+Follow this format:
+
+- One link per line.
+- Use wildcards to match multiple or all locations, Such as \*.openai.com, or just \* for all websites.
+
+There is an inidicator on the right hand of the settings item. If current tab is in the enabled websites list, the indicator will be green, otherwise it will be red.
+
+## Variables input mode
+
+Support `Tab` / `Popup` Input mode, [see more](/docs/create-snippets#input-mode).
+
+## Wrapper symbol
+
+the wrapper symbol is used to wrap the [variable](/docs/create-snippets#variable-snippets) in snippets.
+The default is `{{ }}`, you can change it to any symbol you like. Notice that there is an empty space between the two symbols.
+
+## Trigger symbol
+
+Trigger symbol is used to trigger the snippet popup when you type in the input box.
+The default is `/`.

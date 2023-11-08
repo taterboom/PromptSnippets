@@ -1,11 +1,11 @@
 import { useEffect } from "react"
 import { ROOT_ID } from "../constants"
-import { usePageState } from "../store/pageState"
+import { pageStateSelectors, usePageState } from "../store/pageState"
 import { isInputElement, selectNextRange } from "../utils/dom"
 import { processVariableSelection } from "../utils/snippet"
 
 export default function () {
-  const disabled = usePageState((state) => state.disabled)
+  const disabled = usePageState(pageStateSelectors.disabled)
   useEffect(() => {
     if (disabled) return
     const root = document.getElementById(ROOT_ID)

@@ -12,10 +12,10 @@ export type InputMode = "Tab" | "Popup"
 export type ServerStore = {
   ids: string[]
   snippetsStore: Record<string, Snippet>
-  disabledUrls: string[]
   wrapperSymbol: string[]
   triggerSymbol: string[]
   inputMode: InputMode
+  enabledWebsites: string[]
 }
 
 export type InputElement = HTMLInputElement | HTMLTextAreaElement | BardElement

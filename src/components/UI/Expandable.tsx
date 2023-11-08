@@ -27,7 +27,7 @@ export default function Expandable(
       ref={elRef}
       className={clsx(
         props.className,
-        !expanded && "truncate",
+        !expanded && "!truncate",
         expandable ? (expanded ? "cursor-zoom-out" : "cursor-zoom-in") : "cursor-default"
       )}
       style={{

@@ -1,33 +1,49 @@
+import clsx from "classnames"
 import { AnimatePresence } from "framer-motion"
-import { usePageState } from "../store/pageState"
-import { getUriKey } from "../utils/uri"
-import { PopupContainer } from "./UI/Popup"
-import { MiClose, MiDelete, MiRemove } from "./UI/icons"
-import { PropsWithChildren, useState } from "react"
+import { useState } from "react"
+import { pageStateSelectors, usePageState } from "../store/pageState"
 import { InputMode } from "../types"
+import { PopupContainer } from "./UI/Popup"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./UI/Tooltip"
+import { MiCircleHelp, MiClose, MiRemove } from "./UI/icons"
 
 function EnableSection() {
-  const disabled = usePageState((state) => state.disabled)
-  const updateDisabled = usePageState((state) => state.updateDisabled)
+  const disabled = usePageState(pageStateSelectors.disabled)
+  const enabledWebsites = usePageState((state) => state.enabledWebsites)
+  const updateEnabledWebsites = usePageState((state) => state.updateEnabledWebsites)
 
   return (
     <div className="p-2 hover:bg-base-200">
-      <div className="flex gap-2">
-        <div className="flex-1 overflow-hidden">
-          <div className="text-sm text-content-100 break-words">Enable the extension</div>
-          <div className="text-xs text-content-400 break-words">
-            on the current page {getUriKey(window.location.href)}
+      <div className="">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-1 flex-1 text-sm text-content-100 break-words">
+            <span>Enabled websites</span>
+            <Tooltip placement="top-start">
+              <TooltipTrigger className="p-0.5">
+                <MiCircleHelp className="text-xs text-content-400" />
+              </TooltipTrigger>
+              <TooltipContent className="text-xs text-content-200 w-52 z-[1000000] bg-base-100/10 backdrop-blur border border-neutral-200 p-2 rounded menu-popup-shadow">
+                One link per line. <br />
+                Use wildcards to match multiple or all locations.
+                <br />
+                Such as *.openai.com, or just * for all websites.
+                <br />
+              </TooltipContent>
+            </Tooltip>
           </div>
+          <div
+            className={clsx("w-2 h-2 rounded-full", disabled ? "bg-danger-100" : "bg-success-100")}
+          ></div>
         </div>
-        <div className="flex-shrink-0 pt-0.5">
-          <input
-            type="checkbox"
-            className="checkbox"
-            checked={!disabled}
+        <div className="mt-1">
+          <textarea
+            className="text-sm !mt-1.5 block bg-base-200 text-content-200 border border-neutral-200 rounded w-full py-1.5 px-2 focus:border-primary-100 focus-visible:outline-none"
+            rows={3}
+            value={enabledWebsites.join("\n")}
             onChange={(e) => {
-              updateDisabled(!e.target.checked)
+              updateEnabledWebsites(e.target.value.split("\n"))
             }}
-          ></input>
+          ></textarea>
         </div>
       </div>
     </div>

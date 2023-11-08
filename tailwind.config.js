@@ -78,6 +78,16 @@ export default {
         100: "rgb(var(--color-danger-content-100) / <alpha-value>)", // default
         200: "rgb(var(--color-danger-content-200) / <alpha-value>)", // hover
       },
+      success: {
+        // button background
+        100: "rgb(var(--color-success-100) / <alpha-value>)", // default
+        200: "rgb(var(--color-success-200) / <alpha-value>)", // hover
+      },
+      "success-content": {
+        // button foreground
+        100: "rgb(var(--color-success-content-100) / <alpha-value>)", // default
+        200: "rgb(var(--color-success-content-200) / <alpha-value>)", // hover
+      },
     },
   },
   plugins: [],

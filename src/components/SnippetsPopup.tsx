@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import clsx from "classnames"
 import { motion, AnimatePresence } from "framer-motion"
-import { usePageState } from "../store/pageState"
+import { pageStateSelectors, usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
 import {
   awesomeSetSelectionRange,
@@ -388,7 +388,6 @@ function SnippetsPicker(props: { onClose: () => void }) {
 }
 
 function ControlBar(props: { onClose: () => void }) {
-  const updateDisabled = usePageState((state) => state.updateDisabled)
   return (
     <div className="flex items-center gap-2 h-full">
       <button
@@ -399,20 +398,6 @@ function ControlBar(props: { onClose: () => void }) {
       >
         <MiClose />
       </button>
-      <Tooltip>
-        <TooltipTrigger
-          className="btn btn-icon btn-sm"
-          onClick={() => {
-            updateDisabled(true)
-            props.onClose()
-          }}
-        >
-          <TablerPower />
-        </TooltipTrigger>
-        <TooltipContent className="w-40 text-xs text-content-200 z-[1000000] bg-base-100/70 backdrop-blur border border-neutral-200 p-2 rounded menu-popup-shadow">
-          Disable the popup in this page. You can enable it later in the settings panel.
-        </TooltipContent>
-      </Tooltip>
     </div>
   )
 }
@@ -512,7 +497,7 @@ function SnippetsPopupInner() {
 }
 
 export default function SnippetsPopup() {
-  const disabled = usePageState((state) => state.disabled)
+  const disabled = usePageState(pageStateSelectors.disabled)
   const target = usePageState((state) => state.currentInput)
   const triggerSymbol = usePageState((state) => state.triggerSymbol)
   const [visible, setVisible] = useState(false)

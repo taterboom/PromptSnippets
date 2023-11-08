@@ -28,7 +28,7 @@ useSnippets.setState({
     [DEFAULT_SNIPPET_DEMO_3.id]: DEFAULT_SNIPPET_DEMO_3,
   },
 })
-usePageState.setState({ disabled: false })
+usePageState.setState({ enabledWebsites: ["*"] })
 
 window.chrome = {
   ...window?.chrome,
