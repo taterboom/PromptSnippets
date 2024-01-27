@@ -43,9 +43,9 @@ export function InputPopup(props: InputPopupProps) {
         submitRef.current?.()
       }
     }
-    document.addEventListener("keydown", onKeydown, { capture: true })
+    window.addEventListener("keydown", onKeydown, { capture: true })
     return () => {
-      document.removeEventListener("keydown", onKeydown, { capture: true })
+      window.removeEventListener("keydown", onKeydown, { capture: true })
     }
   }, [])
   return (

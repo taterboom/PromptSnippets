@@ -101,7 +101,7 @@ export const getVariables = (snippetContent: string, wrapperSymbol: string[]) =>
   }, [] as Variable[])
 }
 
-export const processVariableSelection: SelectNextRangeProcess = (nextRange, _, inputEl) => {
+export const processVariableSelection: SelectNextRangeProcess = async (nextRange, _, inputEl) => {
   if (nextRange) {
     const currentSelectionRange = getSelectionRange(inputEl)
     // set default value
@@ -115,7 +115,7 @@ export const processVariableSelection: SelectNextRangeProcess = (nextRange, _, i
         text.slice(nextRange.range[0] + left.length, nextRange.range[1] - right.length).trim()
       )
       if (variable.defaultValue) {
-        setInputValue(
+        await setInputValue(
           inputEl,
           text.slice(0, nextRange.range[0]) + variable.defaultValue + text.slice(nextRange.range[1])
         )
