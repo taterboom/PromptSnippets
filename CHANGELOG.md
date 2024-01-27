@@ -1,5 +1,11 @@
 # promptsnippets
 
+## 1.2.0
+
+### Minor Changes
+
+- [#21](https://github.com/taterboom/PromptSnippets/pull/21) [`5002552`](https://github.com/taterboom/PromptSnippets/commit/5002552c2cc61163f4daed73afc72c50986b2561) Thanks [@taterboom](https://github.com/taterboom)! - (try to) support all WYSIWYG editors
+
 ## 1.1.0
 
 ### Minor Changes
