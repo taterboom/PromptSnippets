@@ -54,21 +54,20 @@ test("getSnippetChunks should be ok", () => {
   ])
 })
 
-test("processVariableSelection should be ok", () => {
+test("processVariableSelection should be ok", async () => {
   const inputEl = document.createElement("input")
   inputEl.value = `t {{lang${VARIABLE_DEFAULT_VALUE_SEPARATOR}zh}}: {{text}}`
   inputEl.selectionStart = 2
   inputEl.selectionEnd = 13
-  expect(
-    processVariableSelection(
-      {
-        range: [2, 13],
-        wrapper: "{{ }}",
-      },
-      ["{{ }}"],
-      inputEl
-    )
-  ).toEqual([2, 4])
+  const result = await processVariableSelection(
+    {
+      range: [2, 13],
+      wrapper: "{{ }}",
+    },
+    ["{{ }}"],
+    inputEl
+  )
+  expect(result).toEqual([2, 4])
 })
 
 test("parseVariable should be ok", () => {
