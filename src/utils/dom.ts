@@ -2,6 +2,16 @@ import { InputElement } from "../types"
 import contentEditableUtils from "./platform/contenteditable"
 import { parseWrapperSymbol } from "./snippet"
 
+export function getAccurateActiveElement(el: Element | null) {
+  if (el?.shadowRoot) {
+    const activeElement = el.shadowRoot.activeElement
+    if (activeElement) return getAccurateActiveElement(activeElement)
+    return null
+  } else {
+    return el
+  }
+}
+
 export const isInputElement = (element: Element | null | undefined): element is InputElement =>
   !!element &&
   (element instanceof HTMLInputElement ||

@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { ROOT_ID } from "../constants"
 import { pageStateSelectors, usePageState } from "../store/pageState"
-import { isInputElement, selectNextRange } from "../utils/dom"
+import { getAccurateActiveElement, isInputElement, selectNextRange } from "../utils/dom"
 import { processVariableSelection } from "../utils/snippet"
 
 export default function () {
@@ -11,8 +11,9 @@ export default function () {
     const root = document.getElementById(ROOT_ID)
     if (!root) return
     // check current active element
-    if (isInputElement(document.activeElement)) {
-      usePageState.setState({ currentInput: document.activeElement })
+    const activeElement = getAccurateActiveElement(document.activeElement)
+    if (isInputElement(activeElement)) {
+      usePageState.setState({ currentInput: activeElement })
     }
     // listen to input element
     const onKeydown = async (e: KeyboardEvent) => {
@@ -32,9 +33,9 @@ export default function () {
         // usePageState.setState({ currentInput: null })
       }
     }
-    document.addEventListener("keydown", onKeydown, { capture: true })
+    window.addEventListener("keydown", onKeydown, { capture: true })
     return () => {
-      document.removeEventListener("keydown", onKeydown)
+      window.removeEventListener("keydown", onKeydown)
     }
   }, [disabled])
   return null

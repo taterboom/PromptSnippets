@@ -5,6 +5,7 @@ import { pageStateSelectors, usePageState } from "../store/pageState"
 import { snippetsSelectors, useSnippets } from "../store/snippets"
 import {
   awesomeSetSelectionRange,
+  getAccurateActiveElement,
   getInputValue,
   selectNextRange,
   setChangeListener,
@@ -434,7 +435,7 @@ function SnippetsPopupInner() {
 
   useEffect(() => {
     const closePanel = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && document.activeElement === target) {
+      if (e.key === "Escape" && getAccurateActiveElement(document.activeElement) === target) {
         setVisible(false)
       }
     }
