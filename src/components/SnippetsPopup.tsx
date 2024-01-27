@@ -184,15 +184,15 @@ function SnippetsPicker(props: { onClose: () => void }) {
     return candidateSnippets.find((item) => item.item.id === activeId)
   }, [candidateSnippets, activeId])
   const applySnippetRef = useRef<() => void>()
-  applySnippetRef.current = () => {
+  applySnippetRef.current = async () => {
     const snippet = snippets.find((item) => item.id === activeIdRef.current)
     if (snippet && target) {
       if (inputMode === "Popup" && getVariables(snippet.content, wrapperSymbol).length > 0) {
         setCurrentSelectedSnippet(snippet)
         setPopupActive(false)
       } else {
-        setInputValue(target, snippet.content)
-        selectNextRange(wrapperSymbol, target)
+        await setInputValue(target, snippet.content)
+        await selectNextRange(wrapperSymbol, target)
       }
     }
   }
@@ -236,9 +236,9 @@ function SnippetsPicker(props: { onClose: () => void }) {
         applySnippetRef.current?.()
       }
     }
-    document.addEventListener("keydown", onKeyDown, { capture: true })
+    window.addEventListener("keydown", onKeyDown, { capture: true })
     return () => {
-      document.removeEventListener("keydown", onKeyDown, { capture: true })
+      window.removeEventListener("keydown", onKeyDown, { capture: true })
     }
   }, [popupActive, snippets, target])
   useEffect(() => {
@@ -370,8 +370,9 @@ function SnippetsPicker(props: { onClose: () => void }) {
               setCurrentSelectedSnippet(null)
               setTimeout(() => {
                 if (target) {
-                  setInputValue(target, text)
-                  awesomeSetSelectionRange(target, text.length, text.length)
+                  setInputValue(target, text).then(() => {
+                    awesomeSetSelectionRange(target, text.length, text.length)
+                  })
                 }
                 setTimeout(() => {
                   if (!isUnmountRef.current) {

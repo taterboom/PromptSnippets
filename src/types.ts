@@ -1,4 +1,4 @@
-import { BardElement } from "./utils/platform/bard"
+import { ContentEditableElement } from "./utils/platform/contenteditable"
 
 export type Snippet = {
   id: string
@@ -18,4 +18,4 @@ export type ServerStore = {
   enabledWebsites: string[]
 }
 
-export type InputElement = HTMLInputElement | HTMLTextAreaElement | BardElement
+export type InputElement = HTMLInputElement | HTMLTextAreaElement | ContentEditableElement

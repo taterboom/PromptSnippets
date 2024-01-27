@@ -15,14 +15,18 @@ export default function () {
       usePageState.setState({ currentInput: document.activeElement })
     }
     // listen to input element
-    const onKeydown = (e: KeyboardEvent) => {
+    const onKeydown = async (e: KeyboardEvent) => {
       const target = e.target
       if (!target || !(target instanceof Element)) return
       if (!root.contains(target) && isInputElement(target)) {
         usePageState.setState({ currentInput: target })
         if (e.key === "Tab") {
           e.preventDefault()
-          selectNextRange(usePageState.getState().wrapperSymbol, target, processVariableSelection)
+          await selectNextRange(
+            usePageState.getState().wrapperSymbol,
+            target,
+            processVariableSelection
+          )
         }
       } else {
         // usePageState.setState({ currentInput: null })
