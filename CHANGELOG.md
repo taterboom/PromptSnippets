@@ -1,5 +1,11 @@
 # promptsnippets
 
+## 1.2.1
+
+### Patch Changes
+
+- [`67bbe213238184e03b3a4fbfd6f4dbd66cd3489d`](https://github.com/taterboom/PromptSnippets/commit/67bbe213238184e03b3a4fbfd6f4dbd66cd3489d) Thanks [@taterboom](https://github.com/taterboom)! - change the default enabled websites
+
 ## 1.2.0
 
 ### Minor Changes
