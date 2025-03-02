@@ -3,7 +3,7 @@ import { InputMode, Snippet } from "./types"
 export const ROOT_ID = "__prompt-snippets-root"
 export const DEFAULT_IDS = []
 export const DEFAULT_SNIPPETS_STORE = {}
-export const DEFAULT_ENABLED_WEBSITES = ["*.openai.com", "poe.com", "bard.google.com", "claude.ai"]
+export const DEFAULT_ENABLED_WEBSITES = ["*.google.com", "chatgpt.com", "poe.com", "claude.ai", "deepseek.com"]
 export const DEFAULT_TRIGGER_SYMBOL = ["/", "、"]
 export const DEFAULT_WRAPPER_SYMBOL = ["{{ }}"]
 export const DEFAULT_INPUT_MODE: InputMode = "Tab"
