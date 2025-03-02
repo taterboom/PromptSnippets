@@ -3,6 +3,10 @@
   "private": true,
   "version": "1.2.0",
   "type": "module",
+  "author": {
+    "name": "Taterboom",
+    "email": "xuebagod@gmail.com"
+  },
   "scripts": {
     "test": "vitest run",
     "dev": "vite",
